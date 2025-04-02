@@ -4,7 +4,6 @@ import react from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [react()],
-	// base: "/wp-content/themes/flux-child/build",
 	build: {
 		rollupOptions: {
 			output: {
@@ -13,7 +12,7 @@ export default defineConfig({
 				assetFileNames: `assets/[name].[ext]`,
 			},
 		},
-		outDir: "../flux-child/build",
+		outDir: "dist",
 	},
 	server: {
 		port: 5173,
