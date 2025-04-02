@@ -129,6 +129,7 @@ export default function Configurator() {
 										<div className="acc-button" style={{ marginTop: "32px", marginBottom: "-24px", height: "32px" }}>
 												<SelectButton name="Canopy" /> <SelectButton name="Loading Ramps" />
 										</div>
+										<div className="scroll-space"></div>
 									</div>
 								</div>
 							</div>
@@ -161,6 +162,7 @@ export default function Configurator() {
 								<div className="section-container">
 									{/* CALCULATIONS */}
 									<OrderSection />
+									<div className="scroll-space"></div>
 								</div>
 							</div>
 

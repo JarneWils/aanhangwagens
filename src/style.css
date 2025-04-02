@@ -909,6 +909,10 @@ PDF ----------------------------------------------------------------------------
 		padding: 16px;
 	}
 
+	.scroll-space {
+		height: 150px;
+	}
+
 	/* Stijlen voor scrollbar */
 	.scrollbar {
 		width: 10px;
