@@ -154,6 +154,8 @@ export default function Configurator() {
 										</div>
 									</div>
 								</div>
+								
+								<div className="extraSpace"></div>
 							</div>
 
 							{/* STEP 3 */}
@@ -162,6 +164,8 @@ export default function Configurator() {
 									{/* CALCULATIONS */}
 									<OrderSection />
 								</div>
+								
+								<div className="extraSpace"></div>
 							</div>
 
 							{/* Scrollbar */}
