@@ -14,7 +14,8 @@ import BackButton from "./components/configurator/BackButton.tsx";
 import Loader from "./components/configurator/Loader.tsx";
 import { shallow } from "zustand/shallow";
 import { PerspectiveCamera } from "three";
-// import { SoftShadows } from "@react-three/drei";
+// import { baseUrl } from "./global.ts";
+import { SoftShadows } from "@react-three/drei";
 
 export default function App() {
 	//full screen
@@ -62,10 +63,8 @@ export default function App() {
 				{!fullScreen && <Calculations />}
 				<BackButton />
 				<Loader />
-				{/* Camera look at 1, 0, 0 */}
 				<Canvas
 					gl={{ alpha: true }}
-					// style={{ backgroundColor: "#eeeeee" }}
 					shadows
 					camera={{ fov: 45, near: 0.1, far: 200, position: centeredPosition, }}
 					onCreated={({ camera, gl }) => {
@@ -74,7 +73,8 @@ export default function App() {
 							useThreeStore.getState().setRenderer(gl);
 						}
 					}}>
-					{/* <SoftShadows size={12} samples={20} focus={0.4}/> */}
+					{/* <Environment files={`${baseUrl}/img/environment1.jpg`} /> */}
+					<SoftShadows size={4} samples={20} focus={0.2}/>
 					<CameraController />
 					<Scene />
 				</Canvas>

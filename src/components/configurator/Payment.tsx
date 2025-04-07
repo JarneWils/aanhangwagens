@@ -4,6 +4,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import useButtonState from "../stores/useButtonState";
 import PDFLib from "./pdf/PDFLib";
 import { IoArrowForwardOutline, IoArrowBackOutline } from "react-icons/io5";
+import { baseUrl } from "../../global";
 
 export default function Payment() {
 
@@ -39,27 +40,90 @@ export default function Payment() {
 		setFormIsVisible(true);
 	}, []);
 
+	const [visibleVisa, setVisibleVisa] = useState(true);
+	const [visiblePaypal, setVisiblePaypal] = useState(false);
+	const [visiblePayconiq, setVisiblePayconiq] = useState(false);
+
+	const handleVisibleVisa = useCallback(() => {
+		setVisibleVisa(true);
+		setVisiblePaypal(false);
+		setVisiblePayconiq(false);
+	}, []);
+
+	const handleVisiblePaypal = useCallback(() => {
+		setVisibleVisa(false);
+		setVisiblePaypal(true);
+		setVisiblePayconiq(false);
+	}, []);
+
+	const handleVisiblePayconiq = useCallback(() => {
+		setVisibleVisa(false);
+		setVisiblePaypal(false);
+		setVisiblePayconiq(true);
+	}, []);
+
+	console.log(visibleVisa);
+
 
 	return (
 		<>
 			<div className="form-visible" style={paying === true ? { display: "block" } : { display: "none" }}>
 				<div className="form-blur-bg">
-					<form onSubmit={handleSubmit}>
-						<div className="form-container" style={formIsVisible === true ? { display: "block" } : { display: "none" }}>
+					<div className="form-container" style={formIsVisible === true ? { display: "block" } : { display: "none" }}>
 
-							{/* CLOSE BUTTON */}
-							<button type="button" className="form-close-btn" onClick={handleCloseForm}>
-								<IoMdCloseCircle />
+						{/* CLOSE BUTTON */}
+						<button type="button" className="form-close-btn" onClick={handleCloseForm} style={{marginBottom: "64px"}}>
+							<IoMdCloseCircle />
+						</button>
+
+						<div className="paymethod-container">
+							<div className="pay-title">Payment method</div>
+
+							{/* Visa */}
+							<button type="button" onClick={handleVisibleVisa} className="method-container" style={visibleVisa === true ? {opacity: 1} : {opacity: 0.3}}>
+								<div className="method-dot"></div>
+								<div className="method-icon">
+									<img src={`${baseUrl}/img/visa-logo.jpg`} alt="Visa" style={{width: "100%", height: "100%"}}/>
+								</div>
+								<div className="method-text">
+									<div className="method-text-title">Visa</div>
+									<div className="method-text-info">Continue with Visa</div>
+								</div>
 							</button>
-							
-							<div>
-								<button type="submit" className="form-submit-btn">
-									Buy <IoArrowForwardOutline className="form-submit-btn-icon" />
-								</button>
-							</div>
-							
+
+							{/* Paypal */}
+							<button type="button" onClick={handleVisiblePaypal} className="method-container" style={visiblePaypal === true ? {opacity: 1} : {opacity: 0.3}}>
+								<div className="method-dot"></div>
+								<div className="method-icon">
+									<img src={`${baseUrl}/img/paypal-logo.jpg`} alt="Paypal" style={{width: "100%", height: "100%"}}/>
+								</div>
+								<div className="method-text">
+									<div className="method-text-title">Paypal</div>
+									<div className="method-text-info">Continue with Paypal</div>
+								</div>
+							</button>
+
+							{/* Payconiq */}
+							<button type="button" onClick={handleVisiblePayconiq} className="method-container" style={visiblePayconiq === true ? {opacity: 1} : {opacity: 0.3}}>
+								<div className="method-dot"></div>
+								<div className="method-icon">
+									<img src={`${baseUrl}/img/payconiq-logo.jpg`} alt="Payconiq" style={{width: "100%", height: "100%"}}/>
+								</div>
+								<div className="method-text">
+									<div className="method-text-title">Payconiq</div>
+									<div className="method-text-info">Continue with Payconiq</div>
+								</div>
+							</button>
+
 						</div>
-					</form>
+						
+						<div>
+							<button type="submit" onClick={handleSubmit} className="form-submit-btn" style={{marginTop: "16px"}}>
+								Buy <IoArrowForwardOutline className="form-submit-btn-icon" />
+							</button>
+						</div>
+						
+					</div>
 
 					{/* SAVE BUTTONS */}
 					<div

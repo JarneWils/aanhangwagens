@@ -59,7 +59,7 @@ export default function OrderSection() {
 			<div className="order-section-grid">
 				<div className="order-section-item">
 					<p className="order-section-subtitle">Size:</p>
-					<p className="order-section-text">{frameLength} x {frameWidth} x {plankHeight} m</p>
+					<p className="order-section-text">{frameLength + 1.2} x {frameWidth + 0.5} x {plankHeight + 0.72 + 1} m</p>
 				</div>
 				<div className="order-section-item">
 					<p className="order-section-subtitle">Weight:</p>

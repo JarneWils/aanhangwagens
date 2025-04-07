@@ -51,7 +51,7 @@ export default function MeasurementsConfig() {
 		<>
 			<div className="section-container">
 				<h3>
-					Measurements{" "}
+					Trailerbed size{" "}
 					<button className="reset-btn" onClick={handleReset}>
 						<RiResetLeftFill />
 					</button>

@@ -1,10 +1,9 @@
 import { shallow } from "zustand/shallow";
 import useFormStore from "../stores/useFormStore";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
 import useButtonState from "../stores/useButtonState";
-import PDFLib from "./pdf/PDFLib";
-import { IoArrowForwardOutline, IoArrowBackOutline } from "react-icons/io5";
+import { IoArrowForwardOutline } from "react-icons/io5";
 
 export default function Form() {
 	const { setFirstName, firstName, setLastName, lastName, setPhoneNumber, phoneNumber, setEMail, eMail } = useFormStore(
@@ -31,14 +30,12 @@ export default function Form() {
 
 	const [formIsVisible, setFormIsVisible] = useState(true);
 
-	const [saveBtnVisible, setSaveBtnVisible] = useState(false);
 
 	// submit handler
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
 		if (isEmailValid) {
 			setSavePdf(false);
-			setSaveBtnVisible(false);
 			setFormIsVisible(true);
 			setPaying(true);
 		} else {
@@ -49,15 +46,8 @@ export default function Form() {
 	// close button
 	const handleCloseForm = useCallback(() => {
 		setSavePdf(false);
-		setSaveBtnVisible(false);
 		setFormIsVisible(true);
 	}, [setSavePdf]);
-
-	// terug naar form
-	const handleBack = useCallback(() => {
-		setSaveBtnVisible(false);
-		setFormIsVisible(true);
-	}, []);
 
 	// geldig telefoonnummer
 	const formatPhoneNumber = (value: string) => {
@@ -74,6 +64,20 @@ export default function Form() {
 		setIsEmailValid(emailRegex.test(email));
 	};
 
+	useEffect(() => {
+		// Haal de parameters uit de URL
+		const params = new URLSearchParams(window.location.search);
+	
+		const urlEmailAdress = params.get('email_adress') || '';
+		// Als de parameters aanwezig zijn in de URL, update ze in de store
+		if (urlEmailAdress) {
+			setEMail(urlEmailAdress)
+		} else {
+			setEMail('')
+		};
+	  }, [setEMail]);
+
+
 	return (
 		<>
 			<div className="form-visible" style={savePdf === true ? { display: "block" } : { display: "none" }}>
@@ -87,7 +91,7 @@ export default function Form() {
 
 							{/* FIRST NAME */}
 							<div className="input-container">
-								<div className="form-div">first name:</div>
+								<div className="form-div">First name:</div>
 								<input
 									type="text"
 									name="naam"
@@ -99,7 +103,7 @@ export default function Form() {
 
 							{/* LAST NAME */}
 							<div className="input-container">
-								<div className="form-div">last name:</div>
+								<div className="form-div">Last name:</div>
 								<input
 									type="text"
 									name="naam"
@@ -111,7 +115,7 @@ export default function Form() {
 
 							{/* GSM */}
 							<div className="input-container">
-								<div className="form-div">gsm:</div>
+								<div className="form-div">Gsm:</div>
 								<input
 									type="text"
 									name="naam"
@@ -123,7 +127,7 @@ export default function Form() {
 
 							{/* E-MAIL */}
 							<div className="input-container">
-								<div className="form-div">e-mail:</div>
+								<div className="form-div">E-mail:</div>
 								<input
 									type="text"
 									name="naam"
@@ -141,29 +145,6 @@ export default function Form() {
 							</button>
 						</div>
 					</form>
-
-					{/* SAVE BUTTONS */}
-					<div
-						className="save-visible"
-						style={saveBtnVisible === true && formIsVisible === false ? { display: "block" } : { display: "none" }}
-					>
-						{/* CLOSE BUTTON */}
-						<button type="button" className="form-close-btn2" onClick={handleCloseForm}>
-							<IoMdCloseCircle />
-						</button>
-						{/* Back button */}
-						<div>
-							<button type="button" className="form-submit-btn" onClick={handleBack}>
-								<IoArrowBackOutline className="form-submit-btn-icon" />
-								Back
-							</button>
-						</div>
-
-						{/* Download button */}
-						<div>
-							<PDFLib />
-						</div>
-					</div>
 				</div>
 			</div>
 		</>

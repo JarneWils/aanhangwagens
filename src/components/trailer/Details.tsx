@@ -10,7 +10,7 @@ import { shallow } from "zustand/shallow"
 export default function Details ()
 {
     // LENGTH
-    const {frameLength, frameWidth, plankHeight} = useMeasurements(
+    const {frameLength, frameWidth} = useMeasurements(
     (state) => {
         return {
             frameLength: state.frameLength,

@@ -249,21 +249,21 @@ export default function PDFLib() {
 			font: boldFont,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText(`lengte: ${(frameLength + 1).toFixed(2)}m`, {
+		page.drawText(`lengte: ${(frameLength + 1.2).toFixed(2)}m`, {
 			x: cm(10),
 			y: height - cm(10.3),
 			size: 10,
 			font: font,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText(`breedte: ${(frameWidth + 0.6).toFixed(2)}m`, {
+		page.drawText(`breedte: ${(frameWidth + 0.5).toFixed(2)}m`, {
 			x: cm(10),
 			y: height - cm(10.8),
 			size: 10,
 			font: font,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText(`hoogte: ${(plankHeight + 0.72 + 0.4).toFixed(2)}m`, {
+		page.drawText(`hoogte: ${(plankHeight + 0.72 + 1).toFixed(2)}m`, {
 			x: cm(10),
 			y: height - cm(11.3),
 			size: 10,
@@ -458,15 +458,17 @@ export default function PDFLib() {
 		formData.append("canopy", canopy ? "1" : "0");
 		// loadingRamps boolean
 		formData.append("loading_ramps", loadingRamps ? "1" : "0");
+		// send automatic email
+		formData.append("email_adress", eMail);
 
 		// send data to the database
 		fetch("http://localhost:3000/wp-admin/admin-ajax.php", {
 			method: "POST",
 			body: formData,
 		})
-			.then((response) => response.json())
-			.then((data) => console.log(data))
-			.catch((error) => console.error("Error:", error));
+		.then((response) => response.json())
+		.then((data) => console.log(data))
+		.catch((error) => console.error("Error:", error));
 	}
 
 	return (

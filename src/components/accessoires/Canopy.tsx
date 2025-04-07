@@ -31,7 +31,7 @@ export default function Canopy() {
 	 * TEXTURES
 	 */
 	const leatherTexture = useTexture({
-		map: `${baseUrl}/textures/canopy/fabric_leather_02_diff_4k_9.0.jpg`,
+		map: `${baseUrl}/textures/canopy/fabric_leather_02_diff_4k_8.0.jpg`,
 		normalMap: `${baseUrl}/textures/canopy/fabric_leather_02_norm_4k_4.0.jpg`,
 		roughnessMap: `${baseUrl}/textures/metal2.0/concrete_floor_02_rough_4k.jpg`,
 		aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
@@ -50,8 +50,6 @@ export default function Canopy() {
 		texture.wrapT = THREE.MirroredRepeatWrapping;
 		texture.repeat.set(0.2, 10.8);
 	});
-
-
 
 
 	/**

@@ -110,7 +110,13 @@ export default function Configurator() {
 							<div style={{ display: step === 1 ? 'block' : 'none' }}>
 								{/* MEASUREMENTS */}
 								<MeasurementsConfig />
+								{/* CALCULATIONS */}
+								<CalculationConfig />
 
+							</div>
+
+							{/* STEP 2 */}
+							<div style={{ display: step === 2 ? 'block' : 'none' }}>
 								{/* ACCESSOIRES */}
 								<div className="section-container">
 									<h3>Accessoires</h3>
@@ -129,16 +135,11 @@ export default function Configurator() {
 										<div className="acc-button" style={{ marginTop: "32px", marginBottom: "-24px", height: "32px" }}>
 												<SelectButton name="Canopy" /> <SelectButton name="Loading Ramps" />
 										</div>
-										<div className="scroll-space"></div>
 									</div>
 								</div>
-							</div>
-
-							{/* STEP 2 */}
-						
-							<div style={{ display: step === 2 ? 'block' : 'none' }}>
+								{/* TEXTURES */}
 								<div className="section-container">
-								<h3>Textures</h3>
+									<h3>Textures</h3>
 									<div className="buttonTexture-container">
 										<div className="acc-button">
 											<div>
@@ -153,8 +154,6 @@ export default function Configurator() {
 										</div>
 									</div>
 								</div>
-								{/* CALCULATIONS */}
-								<CalculationConfig />
 							</div>
 
 							{/* STEP 3 */}
@@ -162,7 +161,6 @@ export default function Configurator() {
 								<div className="section-container">
 									{/* CALCULATIONS */}
 									<OrderSection />
-									<div className="scroll-space"></div>
 								</div>
 							</div>
 

@@ -302,7 +302,7 @@ export default function Calculations() {
 					<div className="weight" style={{ color: totalWeightRounded > 750 ? "rgb(255, 50, 50)" : "var(--color-dark-text)" }}>
 						<MdOutlineScale className="weight-icon" /> {totalWeightRounded} kg
 					</div>
-					<div className="price"> <IoPricetagsOutline className="price-icon" /> € {totalPriceRounded}</div>
+					<div className="price" > <IoPricetagsOutline className="price-icon"/> € {totalPriceRounded}</div>
 				</div>
 			</div>
 		</>
