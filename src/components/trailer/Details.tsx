@@ -258,7 +258,47 @@ export default function Details ()
         </group>
 
         <group
-        name="wheel-flectors">
+        name="wheel-flectors-back">
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Cube.geometry}
+                material={backLightMaterial}
+                position={[0.38, -0.13, frameWidth / 2 + 0.15]}
+                scale={[0.03, 0.03, 0.1]}
+                rotation={[0, -Math.PI * 0.5, 0]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Cube.geometry}
+                material={redBackLightMaterial}
+                position={[0.385, -0.125, frameWidth / 2 + 0.15]}
+                scale={[0.025, 0.025, 0.1]}
+                rotation={[0, -Math.PI * 0.5, 0]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Cube.geometry}
+                material={backLightMaterial}
+                position={[0.38, -0.13, - (frameWidth / 2 + 0.15)]}
+                scale={[0.03, 0.03, 0.1]}
+                rotation={[0, -Math.PI * 0.5, 0]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Cube.geometry}
+                material={redBackLightMaterial}
+                position={[0.385, -0.125, - (frameWidth / 2 + 0.15)]}
+                scale={[0.025, 0.025, 0.1]}
+                rotation={[0, -Math.PI * 0.5, 0]}
+            />
+        </group>
+        <group
+        name="wheel-flectors-front"
+        rotation={[0, Math.PI, 0]}>
             <mesh
                 castShadow
                 receiveShadow
