@@ -258,7 +258,8 @@ export default function Details ()
         </group>
 
         <group
-        name="wheel-flectors-back">
+        name="wheel-flectors-back"
+        position={ frameLength>3 ? [0.385,0,0] : [0,0,0]}>
             <mesh
                 castShadow
                 receiveShadow
@@ -298,7 +299,8 @@ export default function Details ()
         </group>
         <group
         name="wheel-flectors-front"
-        rotation={[0, Math.PI, 0]}>
+        rotation={[0, Math.PI, 0]}
+        position={ frameLength>3 ? [-0.385,0,0] : [0,0,0]}>
             <mesh
                 castShadow
                 receiveShadow

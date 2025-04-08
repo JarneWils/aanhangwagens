@@ -22,15 +22,15 @@ interface MeasurementsState {
 
 const useMeasurements = createWithEqualityFn<MeasurementsState>((set) => ({
 	// FRAME LENGTH
-	frameLength: 2.3,
+	frameLength: 0,
 	setFrameLength: (newFrameLength: number) => set({ frameLength: newFrameLength }),
 
 	// FRAME WIDTH
-	frameWidth: 1.5,
+	frameWidth: 0,
 	setFrameWidth: (newFrameWidth: number) => set({ frameWidth: newFrameWidth }),
 
 	// FRAME HEIGHT
-	plankHeight: 0.3,
+	plankHeight: 0,
 	setPlankHeight: (newPlankHeight: number) => set({ plankHeight: newPlankHeight }),
 
 	// TOTAL WEIGHT

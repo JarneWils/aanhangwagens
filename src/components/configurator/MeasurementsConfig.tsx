@@ -24,6 +24,7 @@ export default function MeasurementsConfig() {
 
 	useEffect(() => {
 		// Haal de parameters uit de URL
+
 		const params = new URLSearchParams(window.location.search);
 	
 		const urlFrameLength = parseFloat(params.get('length') || '');
@@ -31,20 +32,14 @@ export default function MeasurementsConfig() {
 		const urlPlankHeight = parseFloat(params.get('height') || '');
 	
 		// Als de parameters aanwezig zijn in de URL, update ze in de store
-		if (!isNaN(urlFrameLength)) setFrameLength(urlFrameLength);
-		if (!isNaN(urlFrameWidth)) setFrameWidth(urlFrameWidth);
-		if (!isNaN(urlPlankHeight)) setPlankHeight(urlPlankHeight);
-	  }, [setFrameLength, setFrameWidth, setPlankHeight]);
+		if (!isNaN(urlFrameLength)) {setFrameLength(urlFrameLength)} else if (isNaN(urlFrameLength)) {setFrameLength(2.3)};
+		if (!isNaN(urlFrameWidth)) {setFrameWidth(urlFrameWidth)} else if (isNaN(urlFrameWidth)) {setFrameWidth(1.5)};
+		if (!isNaN(urlPlankHeight)) {setPlankHeight(urlPlankHeight)} else if (isNaN(urlPlankHeight)) {setPlankHeight(0.3)};
+	}, [setFrameLength, setFrameWidth, setPlankHeight]);
 
 	  // reload page
 	  const handleReset = () => {
 		window.location.reload();
-		// setFrameLength(2.3);
-		// setFrameWidth(1.5);
-		// setPlankHeight(0.3);
-		// setJockeyWheel(true);
-		// setMeshSideState(false);
-		// setSpareWheel(false);
 	};
 
 	return (
@@ -58,15 +53,15 @@ export default function MeasurementsConfig() {
 				</h3>
 				<div className="measurement">
 					<div className="slider-title">Length</div>
-					<Slider value={frameLength} min={1} max={5} onChange={setFrameLength} />
+					<Slider value={frameLength != 0 ? frameLength : 2.3} min={1} max={5} onChange={setFrameLength} />
 				</div>
 				<div className="measurement">
 					<div className="slider-title">Width</div>
-					<Slider value={frameWidth} min={1} max={2.2} onChange={setFrameWidth} />
+					<Slider value={frameWidth != 0 ? frameWidth : 1.5} min={1} max={2.2} onChange={setFrameWidth} />
 				</div>
 				<div className="measurement">
 					<div className="slider-title">Height</div>
-					<Slider value={plankHeight} min={0} max={0.45} onChange={setPlankHeight} />
+					<Slider value={plankHeight != 0 ? plankHeight : 0.3} min={0.001} max={0.45} onChange={setPlankHeight} />
 				</div>
 			</div>
 		</>

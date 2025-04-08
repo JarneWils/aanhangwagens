@@ -72,20 +72,20 @@ export default function PDFLib() {
 		// save old size for later
 		const oldSize = new Vector2();
 		renderer.getSize(oldSize);
-		renderer.setSize(imgWidth, imgHeight);
+		// renderer.setSize(imgWidth, imgHeight);
 
 		// get the scene
 		if (!scene) return;
 
 		// resize camera
 		if (!camera) return;
-		camera.aspect = imgWidth / imgHeight;
+		// camera.aspect = imgWidth / imgHeight;
 		camera.updateProjectionMatrix();
 
 		// Get the 3D canvas.
 		const renderCanvas = document.querySelector<HTMLCanvasElement>(".main canvas");
 		if (!renderCanvas) return;
-		camera.position.set(-3.5, 1, 2 + frameLength / 2);
+		camera.position.set(-3, 0.5, 2 + frameLength / 2);
 
 		// Render the scene.
 		renderer.render(scene, camera);
@@ -460,6 +460,8 @@ export default function PDFLib() {
 		formData.append("loading_ramps", loadingRamps ? "1" : "0");
 		// send automatic email
 		formData.append("email_adress", eMail);
+		// name
+		formData.append("name", `${firstName} ${lastName}`);
 
 		// send data to the database
 		fetch("http://localhost:3000/wp-admin/admin-ajax.php", {
