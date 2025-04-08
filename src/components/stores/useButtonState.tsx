@@ -30,6 +30,9 @@ interface ButtonState {
 
 	paying: boolean;
 	setPaying: (newPaying: boolean) => void;
+
+	darkMode: boolean;
+	setDarkMode: (newDarkMode: boolean) => void;
 }
 
 const useButtonState = createWithEqualityFn<ButtonState>((set) => ({
@@ -62,6 +65,9 @@ const useButtonState = createWithEqualityFn<ButtonState>((set) => ({
 
 	paying: false,
 	setPaying: (newPaying) => set({ paying: newPaying }),
+
+	darkMode: false,
+	setDarkMode: (newDarkMode) => set({ darkMode: newDarkMode }),
 }));
 
 export default useButtonState;

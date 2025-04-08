@@ -13,8 +13,18 @@ import { BrightnessContrast, EffectComposer, N8AO, ToneMapping } from "@react-th
 import { ToneMappingMode } from "postprocessing";
 import Canopy from "../accessoires/Canopy.tsx";
 import LoadingRamps from "../accessoires/LoadingRamps.tsx";
+import useButtonState from "../stores/useButtonState.tsx";
+import { shallow } from "zustand/shallow";
 
 export default function MainTrailer() {
+	
+	const {darkMode} = useButtonState(
+		(state) => ({
+			darkMode: state.darkMode,
+		}),
+		shallow
+	);
+
 	return (
 		<>
 			<EffectComposer multisampling={8}>
@@ -37,6 +47,15 @@ export default function MainTrailer() {
 			<Canopy />
 			{/* LOADING RAMPS */}
 			<LoadingRamps />
+
+			{/*Floor*/}
+			<group visible={darkMode}>
+				<mesh position-y={-1} rotation-x={-Math.PI * 0.5} scale={100} receiveShadow>
+					<planeGeometry />
+					<meshBasicMaterial color={"#505050"} opacity={0.25} />
+				</mesh>
+			</group>
+
 		</>
 	);
 }

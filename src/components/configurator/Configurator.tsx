@@ -11,6 +11,8 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 import ExtraButtons from "./ExtraButtons";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useState } from "react";
+import { LuMoonStar } from "react-icons/lu";
+import { MdOutlineWbSunny } from "react-icons/md";
 
 // import Export from "./pdf/Export";
 import Form from "./Form";
@@ -21,9 +23,13 @@ import Payment from "./Payment";
 
 export default function Configurator() {
 	// FULL SCREEN
-	const { fullScreen, setFullScreen,} = useButtonState((state) => ({
+	const { fullScreen, setFullScreen, darkMode, setDarkMode, paying, savePdf } = useButtonState((state) => ({
 		fullScreen: state.fullScreen,
-		setFullScreen: state.setFullScreen
+		setFullScreen: state.setFullScreen,
+		darkMode: state.darkMode,
+		setDarkMode: state.setDarkMode,
+		paying: state.paying,
+		savePdf: state.savePdf,
 		}),
 		shallow
 	);
@@ -50,6 +56,31 @@ export default function Configurator() {
 	};
 
 	const [step, setStep] = useState(1);
+
+	const root = document.getElementById("root");
+
+	const onHandleDarkMode = useCallback(() => {
+		if (darkMode === false && root) {
+			setDarkMode(true);
+			root.style.setProperty('--color-background', '#292929');
+			root.style.setProperty('--color-button-background', '#505050');
+			root.style.setProperty('--color-slider-background', '#505050');
+			root.style.setProperty('--color-dark-text', '#f8f8f8');
+			root.style.setProperty('--color-light-text', '#cccccc');
+			root.style.setProperty('--color-light-grey', '#aaaaaa');
+			root.style.setProperty('--color-white', '#404040');
+			
+		} else if (darkMode === true && root) {
+			setDarkMode(false);
+			root.style.setProperty('--color-background', '#f8f8f8');
+			root.style.setProperty('--color-button-background', '#ffffff');
+			root.style.setProperty('--color-slider-background', '#dedede');
+			root.style.setProperty('--color-dark-text', '#323232');
+			root.style.setProperty('--color-light-text', '#646464');
+			root.style.setProperty('--color-light-grey', '#e6e6e6');
+			root.style.setProperty('--color-white', '#ffffff');
+		}
+	}, [darkMode, setDarkMode]);
 
 	return (
 		<>
@@ -102,6 +133,14 @@ export default function Configurator() {
 								<button onClick={() => setStep(1)} className={step === 1 ? "active" : ""}>1</button>
 								<button onClick={() => setStep(2)} className={step === 2 ? "active" : ""}>2</button>
 								<button onClick={() => setStep(3)} className={step === 3 ? "active" : ""}>3</button>
+
+								
+								<button className="sva-btn"
+								onClick={onHandleDarkMode}
+								style={{ border: "none", fontSize: "1.3em", marginLeft: "124px", marginTop: "2px", color: paying === true && savePdf === false ? "var(--color-accent)" : undefined }}>	
+									{darkMode === false ? <LuMoonStar /> : <MdOutlineWbSunny style={{fontSize: "1.2em"}}/>}
+								</button>
+
 							</div>
 
 							

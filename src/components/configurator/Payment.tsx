@@ -62,8 +62,6 @@ export default function Payment() {
 		setVisiblePayconiq(true);
 	}, []);
 
-	console.log(visibleVisa);
-
 
 	return (
 		<>

@@ -5,11 +5,13 @@ html,
 body,
 #root {
 	--color-background: #f8f8f8;
+	--color-button-background: #ffffff;
+	--color-slider-background: #dedede;
 	--color-accent: #ff5102;
-	--color-accent-soft: rgb(255, 190, 145);
-	--color-dark-text: rgb(50, 50, 50);
-	--color-light-text: rgb(100, 100, 100);
-	--color-light-grey: rgb(230, 230, 230);
+	--color-accent-soft: #ffbe91;
+	--color-dark-text: #323232;
+	--color-light-text: #646464;
+	--color-light-grey: #e6e6e6;
 	--color-white: #ffffff;
 
 	--text-title: 1.2em;
@@ -28,6 +30,9 @@ body,
 	background-color: var(--color-background);
 }
 * {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
 }
 .main {
@@ -223,7 +228,8 @@ body,
 	margin-top: -8px;
 }
 .slider-value input {
-	border: 1.5pt solid #dadada;
+	border: 1.5pt solid var(--color-light-grey);
+	background-color: var(--color-white);
 	border-radius: 5px;
 	width: 32px;
 	padding: 4px;
@@ -244,7 +250,7 @@ input[type="range"] {
 	border-radius: 3px;
 }
 input[type="range"]::-webkit-slider-runnable-track {
-	background-color: var(--color-light-grey);
+	background-color: var(--color-slider-background);
 	height: 4px;
 	border-radius: 3px;
 	appearance: none;
@@ -309,7 +315,7 @@ input[type="range"]::-webkit-slider-thumb {
 	color: var(--color-dark-text);
 	font-family: Arial, Helvetica, sans-serif;
 	border: 2px solid transparent;
-	background-color: white;
+	background-color: var(--color-button-background);
 	box-shadow: var(--shadow-small-box);
 	font-size: 0.925em;
 	transition: 0.2s;
@@ -601,7 +607,7 @@ input[type="range"]::-webkit-slider-thumb {
 	background-color: transparent;
 	border: none;
 	font-size: 1.2em;
-	color: var(--color-light-text);
+	color: var(--color-dark-text);
 	cursor: pointer;
 }
 .sva-btn:hover {
@@ -639,7 +645,7 @@ PDF ----------------------------------------------------------------------------
 .pdf-screenshot {
 	width: calc(600px / 4);
 	height: calc(600px / 4);
-	background-color: #ff5102;
+	background-color: var(--color-accent);
 }
 .afmetingen-title {
 	font-weight: 600;
@@ -681,7 +687,7 @@ PDF ----------------------------------------------------------------------------
 	width: 364px;
 	padding-top: 32px;
 	padding-bottom: 32px;
-	background-color: white;
+	background-color: var(--color-white);
 	border-radius: 16px;
 	box-shadow: var(--shadow-big-box);
 	align-content: center;
@@ -699,9 +705,10 @@ PDF ----------------------------------------------------------------------------
 .form-input {
 	padding: 6px 8px;
 	background-color: var(--color-light-grey);
-	opacity: 0.5;
+	color: var(--color-dark-text);
+	opacity: 0.8;
 	border: none;
-	border-radius: 8px; /* Maakt het mooi afgerond */
+	border-radius: 8px;
 	font-size: 16px;
 	outline: none;
 	transition: all 0.2s ease-in-out;
@@ -716,7 +723,7 @@ PDF ----------------------------------------------------------------------------
 	height: 28px;
 	padding: 0px;
 	background-color: var(--color-accent);
-	color: white;
+	color: var(--color-white);
 	border: none;
 	border-radius: 32px;
 	font-size: 28px;
@@ -727,14 +734,14 @@ PDF ----------------------------------------------------------------------------
 	transition: 0.1s ease-in-out;
 }
 .form-close-btn:hover {
-	background-color: white;
+	background-color: var(--color-white);
 	color: var(--color-accent);
 }
 .form-submit-btn {
 	width: 128px;
 	height: 32px;
 	background-color: var(--color-accent);
-	color: white;
+	color: var(--color-white);
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 0.9em;
 	border: none;
@@ -745,7 +752,7 @@ PDF ----------------------------------------------------------------------------
 	transition: 0.1s ease-in-out;
 }
 .form-submit-btn:hover {
-	background-color: white;
+	background-color: var(--color-white);
 	color: var(--color-accent);
 	border: 1.5pt solid var(--color-accent);
 	border-radius: 6px;
@@ -757,7 +764,7 @@ PDF ----------------------------------------------------------------------------
 .save-visible {
 	width: 300px;
 	height: 140px;
-	background-color: white;
+	background-color: var(--color-white);
 	border-radius: 16px;
 	align-content: center;
 	justify-items: center;
@@ -779,7 +786,7 @@ PDF ----------------------------------------------------------------------------
 }
 .form-close-btn2:hover {
 	background-color: var(--color-accent);
-	color: white;
+	color: var(--color-white);
 }
 
 /* PAYMENT METHOD ---------------------------------------------------------------------- */
@@ -800,6 +807,7 @@ PDF ----------------------------------------------------------------------------
 	height: 64px;
 	display: flex;
 	background-color: var(--color-white);
+	color: var(--color-dark-text);
 	border-radius: 8px;
 	border: 2px solid var(--color-dark-text);
 	margin-bottom: 16px;
@@ -816,7 +824,6 @@ PDF ----------------------------------------------------------------------------
 .method-icon{
 	width: 32px;
 	height: 32px;
-	background-color: #2a6cdd;
 	margin-top: 16px;
 	margin-left: 16px;
 }
@@ -841,7 +848,7 @@ PDF ----------------------------------------------------------------------------
 	margin-top: 16px;
 	margin-bottom: 16px;
 	background-color: var(--color-accent);
-	color: white;
+	color: var(--color-white);
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 0.9em;
 	border: none;
@@ -853,7 +860,7 @@ PDF ----------------------------------------------------------------------------
 }
 .pdf-download-btn:hover,
 .pdf-save-btn:hover {
-	background-color: white;
+	background-color: var(--color-white);
 	color: var(--color-accent);
 	border: 1.5pt solid var(--color-accent);
 	box-shadow: var(--shadow-big-box);

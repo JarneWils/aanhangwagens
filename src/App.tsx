@@ -62,7 +62,7 @@ export default function App() {
 			<StrictMode>
 				{!fullScreen && <Calculations />}
 				<BackButton />
-				<Loader />
+				<Loader/>
 				<Canvas
 					gl={{ alpha: true }}
 					shadows

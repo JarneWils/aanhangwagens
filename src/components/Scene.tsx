@@ -8,6 +8,8 @@ import useButtonState from "./stores/useButtonState";
 import { useEffect } from "react";
 import useThreeStore from "./stores/useThreeStore";
 import { useThree } from "@react-three/fiber";
+import "../style.css";
+import { shallow } from "zustand/shallow";
 
 export default function Scene() {
 	const { gl, scene } = useThree();
@@ -19,14 +21,18 @@ export default function Scene() {
 		useThreeStore.getState().setScene(scene);
 	}, [gl, scene]);
 
-	const fullScreen = useButtonState((state) => {
-		return state.fullScreen;
-	});
+	const {fullScreen, darkMode} = useButtonState(
+		(state) => ({
+			fullScreen: state.fullScreen,
+			darkMode: state.darkMode,
+		}),
+		shallow
+	);
 
 	return (
 		<>
-			<color attach="background" args={["#f8f8f8"]} />
-			{/*<fog attach="fog" args={["#eeeeee", 16, 25]} /> */}
+		{darkMode === false ? <color attach="background" args={["#f8f8f8"]} /> : <color attach="background" args={["#505050"]} />}
+		{darkMode === true ? <fog attach="fog" args={["#505050", 16, 25]} /> : null}
 
 			<OrbitControls
 				maxPolarAngle={Math.PI / 2}
@@ -39,6 +45,7 @@ export default function Scene() {
 
 			{/* <Suspense
 				fallback={
+				<Loader />
 					<mesh position={[0, -0.5, 0]}>
 						<boxGeometry args={[2.3, 1, 1.2, 2, 2, 2]} />
 						<meshBasicMaterial color={"#ff5102"} wireframe={true} />
@@ -53,7 +60,7 @@ export default function Scene() {
 			{/* FLOOR */}
 			<mesh position-y={fullScreen ? -0.4 : -1} rotation-x={-Math.PI * 0.5} scale={40} receiveShadow>
 				<planeGeometry />
-				<shadowMaterial transparent={true} color={"grey"} opacity={0.25} />
+				<shadowMaterial transparent={true} color={"#000000"} opacity={darkMode ? 0.5 : 0.25} />
 			</mesh>
 
 			{/* <Perf position="top-left" /> */}

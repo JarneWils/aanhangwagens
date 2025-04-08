@@ -25,7 +25,7 @@ export default function PDFLib() {
 		}),
 		shallow
 	);
-	const { jockeyWheel, meshSideState, spareWheel, canopy, loadingRamps, setSavePdf } = useButtonState(
+	const { jockeyWheel, meshSideState, spareWheel, canopy, loadingRamps, setSavePdf, darkMode, setDarkMode } = useButtonState(
 		(state) => ({
 			jockeyWheel: state.jockeyWheel,
 			meshSideState: state.meshSideState,
@@ -33,6 +33,8 @@ export default function PDFLib() {
 			canopy: state.canopy,
 			loadingRamps: state.loadingRamps,
 			setSavePdf: state.setSavePdf,
+			darkMode: state.darkMode,
+			setDarkMode: state.setDarkMode,
 		}),
 		shallow
 	);
@@ -77,6 +79,12 @@ export default function PDFLib() {
 		// get the scene
 		if (!scene) return;
 
+		// save darkmode state
+		const darkModeState = darkMode;
+
+		// set background light mode for the screenshot
+		setDarkMode(false);
+
 		// resize camera
 		if (!camera) return;
 		// camera.aspect = imgWidth / imgHeight;
@@ -100,6 +108,13 @@ export default function PDFLib() {
 		camera.position.set(-4, 1.25, 4);
 		camera.aspect = oldSize.x / oldSize.y;
 		camera.updateProjectionMatrix();
+
+		// if the darkmode was false, set it back to the previous state
+		if (darkModeState === false) {
+			setDarkMode(false);
+		} else if (darkModeState === true) {
+			setDarkMode(true);
+		}
 
 		// screenshot data omzetten naar png
 		const imageBytes = await fetch(screenshot).then((res) => res.arrayBuffer());
