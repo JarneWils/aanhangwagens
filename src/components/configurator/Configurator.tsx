@@ -84,6 +84,12 @@ export default function Configurator() {
 
 	return (
 		<>
+		<button className="sva-btn"
+		onClick={onHandleDarkMode}
+		style={{ display: window.innerWidth < 900 ?  "block" : "none", position: "absolute", top: "100px", right: "24px", zIndex: "1000", color: paying === true && savePdf === false ? "var(--color-accent)" : undefined }}>	
+			{darkMode === false ? <LuMoonStar /> : <MdOutlineWbSunny style={{fontSize: "1.2em"}}/>}
+		</button>
+		
 		<div className="gredient-right"></div>
 			<Form />
 			<Payment />
