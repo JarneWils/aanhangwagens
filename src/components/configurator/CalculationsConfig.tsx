@@ -32,14 +32,18 @@ export default function CalculationConfig() {
 								<div className="calculated-number"> {totalWidth} m</div>
 							</div>
 							<div className="calculations-container" style={{ marginBottom: "8px" }}>
-								<div className="calculation">Height: </div>
-								<div className="calculated-number"> {totalHeight} m</div>
+								<div className="calculation">Height:  </div>
+								<div className="calculated-number" style={{ marginLeft: "4px" }}>  {totalHeight} m</div>
 							</div>
 						</div>
 						<div style={{ marginLeft: "16px" }}>
 							<div className="calculations-container" style={{ marginBottom: "8px" }}>
 								<div className="calculation" style={{ marginRight: "6px" }}>Weight:</div>
 								<div className="calculated-number">{totalWeightRounded} kg</div>
+							</div>
+							<div className="calculations-container" style={{ marginBottom: "8px" }}>
+								<div className="calculation" style={{ marginRight: "6px" }}> ... </div>
+								<div className="calculated-number"></div>
 							</div>
 							<div className="calculations-container" style={{ marginBottom: "8px" }}>
 								<div className="calculation" style={{ marginRight: "16px"}}>Price:</div>

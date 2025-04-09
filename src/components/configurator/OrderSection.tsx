@@ -57,22 +57,17 @@ export default function OrderSection() {
 		<div className="order-section-container">
 			<h3> Order</h3>
 			<div className="order-section-grid">
+				{/* SIZE */}
 				<div className="order-section-item">
 					<p className="order-section-subtitle">Size:</p>
 					<p className="order-section-text">{(frameLength + 1.2).toFixed(2)} x {(frameWidth + 0.5).toFixed(2)} x {(plankHeight + 0.72 + 1).toFixed(2)} m</p>
 				</div>
+				{/* WEIGHT */}
 				<div className="order-section-item">
 					<p className="order-section-subtitle">Weight:</p>
 					<p className="order-section-text">{totalWeightRounded} kg</p>
 				</div>
-				<div className="order-section-item">
-					<p className="order-section-subtitle">Accessores:</p>
-					<p className="order-section-text">{jockeyWheel ? "jockey wheel," : ""}</p>
-					<p className="order-section-text">{meshSideState ? "mesh side," : ""}</p>
-					<p className="order-section-text">{spareWheel ? "spare wheel," : ""}</p>
-					<p className="order-section-text">{canopy ? "canopy," : ""}</p>
-					<p className="order-section-text">{loadingRamps ? "loading ramps," : ""}</p>
-				</div>
+				{/* TEXTURE */}
 				<div className="order-section-item" style={{marginTop: "8px"}}>
 					<div className="order-section-subtitle2" style={{marginTop: "8px"}}>
 						<div><img className="order-texture-icon" src={imgPath}/></div>
@@ -97,7 +92,17 @@ export default function OrderSection() {
 						</>
 					) : ""}
 				</div>
+				{/* ACCESSOIRES */}
+				<div className="order-section-item">
+					<p className="order-section-subtitle">Accessores:</p>
+					<p className="order-section-text">{jockeyWheel ? "jockey wheel," : ""}</p>
+					<p className="order-section-text">{meshSideState ? "mesh side," : ""}</p>
+					<p className="order-section-text">{spareWheel ? "spare wheel," : ""}</p>
+					<p className="order-section-text">{canopy ? "canopy," : ""}</p>
+					<p className="order-section-text">{loadingRamps ? "loading ramps," : ""}</p>
+				</div>
 			</div>
+			{/* PRICE */}
 			<div className="order-section-flex">
 				<div className="order-section-flex-item">
 					<p><IoPricetagsOutline style={{fontSize: "1.2em", marginRight: "16px", marginBottom: "-4px"}}/>€ {totalPriceRounded}</p>

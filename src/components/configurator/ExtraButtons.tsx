@@ -1,18 +1,39 @@
 import { useCallback } from "react";
 import useButtonState from "../stores/useButtonState";
 import { shallow } from "zustand/shallow";
+import useMeasurements from "../stores/useMeasurements";
+import useMaterialState from "../stores/useMaterialState";
+import { LiaDiceSolid } from "react-icons/lia";
 // import { LuMoonStar } from "react-icons/lu";
 // import { MdOutlineWbSunny } from "react-icons/md";
 
 export default function ExtraButtons() {
-	const { setSavePdf, savePdf, paying, setPaying, /* darkMode, setDarkMode */ } = useButtonState(
+	const { setSavePdf, savePdf, paying, setPaying, /* darkMode, setDarkMode */ setJockeyWheel, setMeshSideState, setSpareWheel, setCanopy, setLoadingRamps, setGateOpen } = useButtonState(
 		(state) => ({
 			setSavePdf: state.setSavePdf,
 			savePdf: state.savePdf,
 			paying: state.paying,
 			setPaying: state.setPaying,
+			setJockeyWheel: state.setJockeyWheel,
+			setMeshSideState: state.setMeshSideState,
+			setSpareWheel: state.setSpareWheel,
+			setCanopy: state.setCanopy,
+			setLoadingRamps: state.setLoadingRamps,
+			canopy: state.canopy,
+			meshSideState: state.meshSideState,
+			setGateOpen: state.setGateOpen,	
+			loadingRamps: state.loadingRamps,	
 			// darkMode: state.darkMode,
 			// setDarkMode: state.setDarkMode,
+		}),
+		shallow
+	);
+
+	const { setPlankMaterialWoodLight, setPlankMaterialWoodDark, setPlankMaterialMetal } = useMaterialState(
+		(state) => ({
+			setPlankMaterialWoodLight: state.setPlankMaterialWoodLight,
+			setPlankMaterialWoodDark: state.setPlankMaterialWoodDark,
+			setPlankMaterialMetal: state.setPlankMaterialMetal,
 		}),
 		shallow
 	);
@@ -58,9 +79,66 @@ export default function ExtraButtons() {
 	// 	}
 	// }, [darkMode, setDarkMode]);
 
+	const {setFrameLength, setFrameWidth, setPlankHeight } = useMeasurements(
+		(state) => ({
+			setFrameLength: state.setFrameLength,
+			setFrameWidth: state.setFrameWidth,
+			setPlankHeight: state.setPlankHeight,
+		}),
+		shallow
+	);
+
+	let isClicked = false;
+	const onHandleDice = useCallback(() => {
+		isClicked = true;
+		setFrameLength(Math.random() * (5 - 2.3) + 2.3);
+		setFrameWidth(Math.random() * (2.2 - 1) + 1);
+		setPlankHeight(Math.random() * (0.45 - 0.001) + 0.001);
+	
+		const newLoadingRamps = Math.random() > 0.5;
+		setLoadingRamps(newLoadingRamps);
+		
+		if (newLoadingRamps) {
+			setGateOpen(true);
+		} else {
+			setGateOpen(false);
+		}
+	
+		setSpareWheel(Math.random() > 0.5);
+		setJockeyWheel(Math.random() > 0.5);
+	
+		const accessoryIndex = Math.floor(Math.random() * 2);
+		setCanopy(accessoryIndex === 0);
+		setMeshSideState(accessoryIndex === 1);
+	
+		const materialIndex = Math.floor(Math.random() * 3);
+		setPlankMaterialWoodLight(materialIndex === 0);
+		setPlankMaterialWoodDark(materialIndex === 1);
+		setPlankMaterialMetal(materialIndex === 2);
+
+		setTimeout(() => {
+			if (isClicked) {
+				isClicked = false;
+			}
+		}, 500);
+	
+	}, [setFrameLength, setFrameWidth, setPlankHeight]);
+
+
 	return (
 		<>
 			<div className="extra-buttons-container" style={{display: innerWidth > 950 ? 'flex' : 'none'}}>
+			<div className="extra-btn">
+					<button
+						className="sva-btn"
+						onClick={onHandleDice}
+						style={{
+							fontSize: "1.6em",
+							marginRight: "-16px",
+							color: isClicked ? "var(--color-accent)" : undefined}}>
+						<LiaDiceSolid />
+					</button>
+				</div>
 				<div className="extra-btn">
 					<button
 						className="sva-btn"

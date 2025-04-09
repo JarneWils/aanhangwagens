@@ -20,6 +20,7 @@ import TextureButtons from "./TextureButtons";
 import OrderSection from "./OrderSection";
 import useMeasurements from "../stores/useMeasurements";
 import Payment from "./Payment";
+import PopUp from "./PopUp";
 
 export default function Configurator() {
 	// FULL SCREEN
@@ -69,6 +70,7 @@ export default function Configurator() {
 			root.style.setProperty('--color-light-text', '#cccccc');
 			root.style.setProperty('--color-light-grey', '#aaaaaa');
 			root.style.setProperty('--color-white', '#404040');
+			root.style.setProperty('--color-popup', '#198754');
 			
 		} else if (darkMode === true && root) {
 			setDarkMode(false);
@@ -79,20 +81,25 @@ export default function Configurator() {
 			root.style.setProperty('--color-light-text', '#646464');
 			root.style.setProperty('--color-light-grey', '#e6e6e6');
 			root.style.setProperty('--color-white', '#ffffff');
+			root.style.setProperty('--color-popup', '#3EF19E');
 		}
 	}, [darkMode, setDarkMode]);
 
 	return (
 		<>
+
 		<button className="sva-btn"
 		onClick={onHandleDarkMode}
-		style={{ display: window.innerWidth < 900 ?  "block" : "none", position: "absolute", top: "100px", right: "24px", zIndex: "1000", color: paying === true && savePdf === false ? "var(--color-accent)" : undefined }}>	
+		style={{ opacity: savePdf === false && paying === false ? 1 : 0, display: window.innerWidth < 900 ?  "block" : "none", position: "absolute", top: "100px", right: "0px", zIndex: "1000", color: paying === true && savePdf === false ? "var(--color-accent)" : undefined }}>	
 			{darkMode === false ? <LuMoonStar /> : <MdOutlineWbSunny style={{fontSize: "1.2em"}}/>}
 		</button>
-		
+
 		<div className="gredient-right"></div>
 			<Form />
 			<Payment />
+			
+			{/* PopUp */}
+			{innerWidth < 900 ? <PopUp invert={true}/> : null}
 
 			{/* <Export /> */}
 			<div className="scrollable-content">
@@ -105,7 +112,7 @@ export default function Configurator() {
 					<div className="header-title">Create your trailer</div>
 					<div className="header-subtitle">Trailer Configurator</div>
 				</div>
-				<div>
+				<div style={{opacity: savePdf === false && paying === false ? 1 : 0}}>
 					<button className="fullScreenButton" onClick={handleClickFullScreen}>
 						<div className="fullScreenButton-icon">
 							<GoScreenFull />
@@ -126,6 +133,7 @@ export default function Configurator() {
 						<button onClick={() => setStep(1)} className={step === 1 ? "active" : ""}>1</button>
 						<button onClick={() => setStep(2)} className={step === 2 ? "active" : ""}>2</button>
 						<button onClick={() => setStep(3)} className={step === 3 ? "active" : ""}>3</button>
+						
 						<div style={{marginRight: "3vw", marginLeft: "3vw", color: "var(--color-light-text)", fontSize: "0.9em"}}>€ {totalPriceRounded}</div>
 						<div style={{marginLeft: "3vw", color: "var(--color-light-text)",fontSize: "0.9em"}}>{totalWeightRounded} kg</div>
 					</div>
@@ -156,7 +164,7 @@ export default function Configurator() {
 								{/* MEASUREMENTS */}
 								<MeasurementsConfig />
 								{/* CALCULATIONS */}
-								<CalculationConfig />
+								{innerWidth > 900 ? <CalculationConfig /> : null}
 
 							</div>
 
@@ -199,6 +207,8 @@ export default function Configurator() {
 										</div>
 									</div>
 								</div>
+								{/* PopUp */}
+								{innerWidth > 900 ? <PopUp position="top-right" invert={false}/> : null}
 								
 								<div className="extraSpace"></div>
 							</div>

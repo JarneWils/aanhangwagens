@@ -13,6 +13,8 @@ body,
 	--color-light-text: #646464;
 	--color-light-grey: #e6e6e6;
 	--color-white: #ffffff;
+	--color-popup: #323232;
+	--color-popup-background: #ffffff;
 
 	--text-title: 1.2em;
 	--text-sub-title: 0.8em;
@@ -34,6 +36,16 @@ body,
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+.screenshot-cover {
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	background-color: #f5f5f5;
+	opacity: 200;
+	z-index: 100;
 }
 .main {
 	width: 100vw;
@@ -587,7 +599,7 @@ input[type="range"]::-webkit-slider-thumb {
 	gap: 80px;
 	position: fixed;
 	top: 83vh;
-	left: 128px;
+	left: 64px;
 	padding: 8px;
 	padding-right: 16px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -872,6 +884,47 @@ PDF ----------------------------------------------------------------------------
 	padding: 0px 4px;
 }
 
+/* POPUPS */
+.toaster {
+	height: 40px;
+	position: relative !important;
+	top: 40px !important;
+	left:70px !important;
+}
+.toast {
+	width: 380px !important;
+	font-size: 0.9em !important;
+	background-color: var(--color-white) !important;
+	color: var(--color-popup) !important;
+	border: none !important;
+	padding: 16px !important;
+	border-radius: 10px !important;
+	margin-bottom: 10px !important;
+	box-shadow: var(--shadow-big-box) !important;
+}
+.toast-description {
+	font-size: 14px;
+	opacity: 0.8;
+}
+  
+.toast-action {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 6px;
+	cursor: pointer;
+}
+  
+.toast-cancel {
+	background-color: #e0e0e0;
+	color: #333;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
 /*
     MOBILE ------------------------------------------------------------------------------------------------------------------------
 */
@@ -879,6 +932,9 @@ PDF ----------------------------------------------------------------------------
 	/*
         HEADER
     */
+	:root{
+		overflow-x: hidden;
+	}
 	.wp-back-btn {
 		position: fixed;
 		top: 13vh;
@@ -946,13 +1002,14 @@ PDF ----------------------------------------------------------------------------
 	}
 	input[type="range"]::-webkit-slider-thumb {
 		background-color: var(--color-accent);
-		width: 8px;
-		height: 8px;
-		border-radius: 50px;
+		width: 20px; /* groter! */
+		height: 20px;
+		border-radius: 50%;
+		appearance: none;
+		margin-top: -8px; /* aangepast aan nieuwe grootte */
+		touch-action: pan-x;
 		box-shadow: none;
-		appearance: var(--color-accent);
-		margin: -4px 0 0 0;
-		border: 6px solid #ffffff00;
+		border: 5px solid var(--color-white);
 	}
 	.extraSpace {
 		margin-bottom: 28vh;
@@ -1075,7 +1132,6 @@ PDF ----------------------------------------------------------------------------
 	.centerButton {
 		width: 44px;
 		height: 44px;
-		padding: 0px;
 		background-color: transparent;
 		color: var(--color-dark-text);
 		border: none;
@@ -1084,7 +1140,6 @@ PDF ----------------------------------------------------------------------------
 		left: calc(100vw - 64px);
 		top: 33vh;
 		font-size: 1.6em;
-		cursor: pointer;
 	}
 	.centerButton:hover {
 		background-color: transparent;
@@ -1185,5 +1240,20 @@ PDF ----------------------------------------------------------------------------
 		width: 60%;
 		position: relative;
 		left: 20%;
+	}
+
+	/* POPUPS */
+	.toaster {
+		height: 40px;
+		position: absolute !important;
+		top: 49vh !important;
+		left: 0vw !important;
+		z-index: 1 !important;
+		box-shadow: none !important;
+	}
+	.toast {
+		width: 80vw !important;
+		background-color: none !important;
+		box-shadow: none !important;
 	}
 }

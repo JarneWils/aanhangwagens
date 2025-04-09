@@ -25,7 +25,7 @@ export default function PDFLib() {
 		}),
 		shallow
 	);
-	const { jockeyWheel, meshSideState, spareWheel, canopy, loadingRamps, setSavePdf, darkMode, setDarkMode } = useButtonState(
+	const { jockeyWheel, meshSideState, spareWheel, canopy, loadingRamps, setSavePdf, darkMode, setDarkMode, setScreenShot } = useButtonState(
 		(state) => ({
 			jockeyWheel: state.jockeyWheel,
 			meshSideState: state.meshSideState,
@@ -35,6 +35,8 @@ export default function PDFLib() {
 			setSavePdf: state.setSavePdf,
 			darkMode: state.darkMode,
 			setDarkMode: state.setDarkMode,
+			screenShot: state.screenShot,
+			setScreenShot: state.setScreenShot,
 		}),
 		shallow
 	);
@@ -74,26 +76,28 @@ export default function PDFLib() {
 		// save old size for later
 		const oldSize = new Vector2();
 		renderer.getSize(oldSize);
-		// renderer.setSize(imgWidth, imgHeight);
+		renderer.setSize(imgWidth, imgHeight);
 
 		// get the scene
 		if (!scene) return;
 
 		// save darkmode state
 		const darkModeState = darkMode;
-
 		// set background light mode for the screenshot
 		setDarkMode(false);
 
+		// set screenShot to true
+		setScreenShot(true);
+
 		// resize camera
 		if (!camera) return;
-		// camera.aspect = imgWidth / imgHeight;
+		camera.aspect = imgWidth / imgHeight;
 		camera.updateProjectionMatrix();
 
 		// Get the 3D canvas.
 		const renderCanvas = document.querySelector<HTMLCanvasElement>(".main canvas");
 		if (!renderCanvas) return;
-		camera.position.set(-3, 0.5, 2 + frameLength / 2);
+		camera.position.set(-2 - frameLength, 0.1, 4);
 
 		// Render the scene.
 		renderer.render(scene, camera);
@@ -103,18 +107,22 @@ export default function PDFLib() {
 		// take screenshot with data
 		const screenshot = renderCanvas.toDataURL("image/png");
 
-		// Set the renderer and camera size back to the old size.
-		renderer.setSize(oldSize.x, oldSize.y);
-		camera.position.set(-4, 1.25, 4);
-		camera.aspect = oldSize.x / oldSize.y;
-		camera.updateProjectionMatrix();
-
 		// if the darkmode was false, set it back to the previous state
 		if (darkModeState === false) {
 			setDarkMode(false);
 		} else if (darkModeState === true) {
 			setDarkMode(true);
 		}
+		// set screenShot to false
+		setTimeout(() => {
+			setScreenShot(false);
+		}, 500);
+
+		// Set the renderer and camera size back to the old size.
+		renderer.setSize(oldSize.x, oldSize.y);
+		camera.position.set(-4, 1.25, 4);
+		camera.aspect = oldSize.x / oldSize.y;
+		camera.updateProjectionMatrix();
 
 		// screenshot data omzetten naar png
 		const imageBytes = await fetch(screenshot).then((res) => res.arrayBuffer());

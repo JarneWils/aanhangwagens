@@ -33,6 +33,9 @@ interface ButtonState {
 
 	darkMode: boolean;
 	setDarkMode: (newDarkMode: boolean) => void;
+
+	screenShot: boolean;
+	setScreenShot: (newScreenShot: boolean) => void;
 }
 
 const useButtonState = createWithEqualityFn<ButtonState>((set) => ({
@@ -68,6 +71,9 @@ const useButtonState = createWithEqualityFn<ButtonState>((set) => ({
 
 	darkMode: false,
 	setDarkMode: (newDarkMode) => set({ darkMode: newDarkMode }),
+
+	screenShot: false,
+	setScreenShot: (newScreenShot) => set({ screenShot: newScreenShot }),
 }));
 
 export default useButtonState;

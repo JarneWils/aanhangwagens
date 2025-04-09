@@ -16,12 +16,14 @@ import { shallow } from "zustand/shallow";
 import { PerspectiveCamera } from "three";
 // import { baseUrl } from "./global.ts";
 import { SoftShadows } from "@react-three/drei";
+// import PopUp from "./components/configurator/PopUp.tsx";
 
 export default function App() {
 	//full screen
-	const { fullScreen } = useButtonState(
+	const { fullScreen, screenShot } = useButtonState(
 		(state) => ({
 			fullScreen: state.fullScreen,
+			screenShot: state.screenShot,
 		}),
 		shallow
 	);
@@ -58,6 +60,13 @@ export default function App() {
 				height: fullScreen ? "100vh" : windowWidth >= 900 ? "85vh" : "50vh",
 				top: "-8vh",
 			}}>
+			{
+			screenShot === true ?
+			<>
+				<div className="screenshot-cover"></div>
+			</>
+			: null
+			}
 			<script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
 			<StrictMode>
 				{!fullScreen && <Calculations />}
@@ -78,7 +87,10 @@ export default function App() {
 					<CameraController />
 					<Scene />
 				</Canvas>
-				{!fullScreen && <Configurator />}
+				{!fullScreen &&<>
+				{/* <PopUp position="top" invert={false}/> */}
+				<Configurator />
+				</>}
 			</StrictMode>
 		</div>
 	);

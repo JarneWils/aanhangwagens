@@ -67,14 +67,14 @@ export default function Payment() {
 		<>
 			<div className="form-visible" style={paying === true ? { display: "block" } : { display: "none" }}>
 				<div className="form-blur-bg">
-					<div className="form-container" style={formIsVisible === true ? { display: "block" } : { display: "none" }}>
+					<div className="form-container" style={{ display:formIsVisible === true ?  "block" : "none", width: innerWidth < 900 ? "80vw" : undefined, left: innerWidth < 900 ? "10vw" : undefined }}>
 
 						{/* CLOSE BUTTON */}
-						<button type="button" className="form-close-btn" onClick={handleCloseForm} style={{marginBottom: "64px"}}>
+						<button type="button" className="form-close-btn" onClick={handleCloseForm} style={{marginBottom: "64px", marginLeft: innerWidth < 900 ? "10vw" : undefined}}>
 							<IoMdCloseCircle />
 						</button>
 
-						<div className="paymethod-container">
+						<div className="paymethod-container" style={{marginLeft: innerWidth < 900 ? "4vw" : undefined}}>
 							<div className="pay-title">Payment method</div>
 
 							{/* Visa */}

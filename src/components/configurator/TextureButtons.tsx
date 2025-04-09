@@ -1,7 +1,9 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useMaterialState from "../stores/useMaterialState";
 import { shallow } from "zustand/shallow";
 import { baseUrl } from "../../global";
+import useMeasurements from "../stores/useMeasurements";
+// import { toast } from "sonner";
 
 
 export default function TextureButtons({ name }: { name: string }) {
@@ -15,6 +17,13 @@ export default function TextureButtons({ name }: { name: string }) {
 			setPlankMaterialWoodLight: state.setPlankMaterialWoodLight,
 			setPlankMaterialWoodDark: state.setPlankMaterialWoodDark,
 			setPlankMaterialMetal: state.setPlankMaterialMetal,
+		}),
+		shallow
+	);
+
+	const { totalPriceRounded } = useMeasurements(
+		(state) => ({
+			totalPriceRounded: state.totalPriceRounded,
 		}),
 		shallow
 	);
@@ -44,10 +53,34 @@ export default function TextureButtons({ name }: { name: string }) {
 			if (urlMetal === '1'){setPlankMaterialMetal(true)} else {setPlankMaterialMetal(false)};
 		}
 	}, [setPlankMaterialWoodLight, setPlankMaterialWoodDark, setPlankMaterialMetal]);
+	
+	const [lastClicked, setLastClicked] = useState <string | null> (null);
+	const prevPriceRef = useRef <number> (totalPriceRounded);
 
+	// Update prijs bij verandering
+	useEffect(() => {
+		if (lastClicked) {
+			const priceDiff = totalPriceRounded - prevPriceRef.current;
+			if (priceDiff !== 0) {
+				// const sign = priceDiff > 0 ? "+" : "-";
+				// toast.success(`${sign} €${Math.abs(priceDiff).toFixed(2)}: ${lastClicked} geselecteerd`);
+			}
+			prevPriceRef.current = totalPriceRounded;
+			setLastClicked(null);
+		}
+	}, [totalPriceRounded, lastClicked]);
+	
 
 	// change material state on click
 	const handleClick = useCallback(() => {
+
+		// als huidig materiaal al actief is, doe niks
+		if (
+			(name === "Wood Light" && plankMaterialWoodLight) ||
+			(name === "Wood Dark" && plankMaterialWoodDark) ||
+			(name === "Metal" && plankMaterialMetal)
+		) return;
+
 		if (name === "Wood Light") {
 			if (!plankMaterialWoodDark && !plankMaterialMetal && plankMaterialWoodLight) return;
 			setPlankMaterialWoodLight(true);
@@ -64,6 +97,9 @@ export default function TextureButtons({ name }: { name: string }) {
 			setPlankMaterialWoodDark(false);
 			setPlankMaterialMetal(true);
 		}
+
+		setLastClicked(name);
+
 	}, [name, plankMaterialWoodLight, plankMaterialWoodDark, plankMaterialMetal, setPlankMaterialWoodLight, setPlankMaterialWoodDark, setPlankMaterialMetal]);
 	
 

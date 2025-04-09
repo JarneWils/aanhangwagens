@@ -13,17 +13,34 @@ import { BrightnessContrast, EffectComposer, N8AO, ToneMapping } from "@react-th
 import { ToneMappingMode } from "postprocessing";
 import Canopy from "../accessoires/Canopy.tsx";
 import LoadingRamps from "../accessoires/LoadingRamps.tsx";
-import useButtonState from "../stores/useButtonState.tsx";
-import { shallow } from "zustand/shallow";
+// import useButtonState from "../stores/useButtonState.tsx";
+// import { shallow } from "zustand/shallow";
+import { useTexture } from "@react-three/drei";
+import { baseUrl } from "../../global.ts";
+import * as THREE from "three";
 
 export default function MainTrailer() {
 	
-	const {darkMode} = useButtonState(
-		(state) => ({
-			darkMode: state.darkMode,
-		}),
-		shallow
-	);
+	// const {screenShot} = useButtonState(
+	// 	(state) => ({
+	// 		darkMode: state.darkMode,
+	// 		screenShot: state.screenShot,
+	// 	}),
+	// 	shallow
+	// );
+
+	// GRASS TEXTURE
+	const grassTexture = useTexture({
+		map: `${baseUrl}/textures/grass/Grass004_1K-JPG_Color.jpg`,
+		normalMap: `${baseUrl}/textures/grass/Grass004_1K-JPG_NormalGL.jpg`,
+		aoMap: `${baseUrl}/textures/grass/Grass004_1K-JPG_AmbientOcclusion.jpg`,
+	});
+	// repeat
+	Object.values(grassTexture).forEach((texture) => {
+		texture.wrapS = THREE.MirroredRepeatWrapping;
+		texture.wrapT = THREE.MirroredRepeatWrapping;
+		texture.repeat.set(25, 25);
+	});
 
 	return (
 		<>
@@ -48,13 +65,13 @@ export default function MainTrailer() {
 			{/* LOADING RAMPS */}
 			<LoadingRamps />
 
-			{/*Floor*/}
-			<group visible={darkMode}>
-				<mesh position-y={-1} rotation-x={-Math.PI * 0.5} scale={100} receiveShadow>
+			{/*Grass*/}
+			{/* <group visible={screenShot}>
+				<mesh position-y={-0.48} rotation-x={-Math.PI * 0.5} scale={100} receiveShadow>
 					<planeGeometry />
-					<meshBasicMaterial color={"#505050"} opacity={0.25} />
+					<meshStandardMaterial map={grassTexture.map} normalMap={grassTexture.normalMap} opacity={0.25} />
 				</mesh>
-			</group>
+			</group> */}
 
 		</>
 	);

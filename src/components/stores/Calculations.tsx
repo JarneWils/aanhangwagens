@@ -43,13 +43,14 @@ export default function Calculations() {
 	// prices
 	const woodPrice = plankMaterialWoodLight ? 10 : plankMaterialWoodDark ? 6.81 : plankMaterialMetal ? 35 : 0; // €/m²
 	const metalPrice = 35; // €/m²
-	let axlePrice = 300; // €
+	let axlePrice = 400; // €
 	const koppelstukPrice = 75; // €
 	const noseWheelPrice = 60; // €
-	let jockeyWheelPrice = 22; // €
+	let jockeyWheelPrice = 60; // €
+	let meshSidePrice = 200; // €
 	let spareWheelPrice = 82; //€
-	let canopyPrice = 150; //€
-	let loadingRampsPrice = 25; //€
+	let canopyPrice = 500; //€
+	let loadingRampsPrice = 40; //€
 
 	// measurements
 	const { frameLength, frameWidth, plankHeight, setTotalWeightRounded, setTotalPriceRounded } = useMeasurements(
@@ -222,27 +223,33 @@ export default function Calculations() {
 		areaBottomMiddleBar +
 		areaTopBarsMiddle +
 		areaTopSideBar +
-		areaTrailerNoseFrame +
-		meshSidesWeight / metalWeight;
+		areaTrailerNoseFrame;
 	const totalMetalPrice = totalMetalArea * metalPrice;
 
 	//AXLES
 	if (frameLength <= 3) {
-		axlePrice = 300;
+		axlePrice = axlePrice;
 	} else {
-		axlePrice = 600;
+		axlePrice = axlePrice * 2;
 	}
 
 	//Jockey Wheel
 	if (jockeyWheel === true) {
-		jockeyWheelPrice = 22;
+		jockeyWheelPrice = jockeyWheelPrice;
 	} else {
 		jockeyWheelPrice = 0;
 	}
 
+	//Mesh Sides
+	if (meshSideState === true) {
+		meshSidePrice = meshSidePrice;
+	} else {
+		meshSidePrice = 0;
+	}
+
 	//Spare Wheel
 	if (spareWheel === true) {
-		spareWheelPrice = 82;
+		spareWheelPrice = spareWheelPrice;
 	} else {
 		spareWheelPrice = 0;
 	}
@@ -271,6 +278,7 @@ export default function Calculations() {
 			koppelstukPrice +
 			noseWheelPrice +
 			jockeyWheelPrice +
+			meshSidePrice +
 			spareWheelPrice +
 			canopyPrice +
 			loadingRampsPrice
