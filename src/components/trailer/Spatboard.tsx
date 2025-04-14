@@ -1,13 +1,13 @@
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import { useTexture } from "@react-three/drei";
+import { useGLTF, useTexture } from "@react-three/drei";
 
 import useMeasurements from "../stores/useMeasurements";
 import { baseUrl } from "../../global";
 
 export default function Spatboard() {
 	/**
-	 * MEASUREMENTS
+	 * Stores
 	 */
 	const frameWidth = useMeasurements((state) => {
 		return state.frameWidth;
@@ -16,21 +16,6 @@ export default function Spatboard() {
 		return state.frameLength;
 	});
 
-	/**
-	 * TEXTURES
-	 */
-	const metalTexture = useTexture({
-		map: `${baseUrl}/textures/metal2.0/concrete_floor_02_diff_4k_2.0.jpg`,
-		normalMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_nor_gl_4k.jpg`,
-		roughnessMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_rough_4k.jpg`,
-		aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
-	});
-
-	Object.values(metalTexture).forEach((texture) => {
-		texture.wrapS = THREE.MirroredRepeatWrapping;
-		texture.wrapT = THREE.MirroredRepeatWrapping;
-		texture.repeat.set(1.5, 1);
-	});
 
 	// GEOMETRIES
 	const cylinderEnkelAs = useMemo(() => {
@@ -54,18 +39,45 @@ export default function Spatboard() {
 		return geo;
 	}, []);
 
+	/**
+	 * TEXTURES
+	 */
+	const metalTexture = useTexture({
+		map: `${baseUrl}/textures/metal2.0/concrete_floor_02_diff_4k_2.0.jpg`,
+		normalMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_nor_gl_4k.jpg`,
+		roughnessMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_rough_4k.jpg`,
+		aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
+	});
+
+	Object.values(metalTexture).forEach((texture) => {
+		texture.wrapS = THREE.MirroredRepeatWrapping;
+		texture.wrapT = THREE.MirroredRepeatWrapping;
+		texture.repeat.set(1.5, 1);
+	});
+
 	// MATERIALS
+	// const material = useMemo(() => {
+	// 	const mat = new THREE.MeshStandardMaterial({
+	// 		...metalTexture,
+	// 		// color: "#bbbbbb",
+	// 		color: "#999999",
+	// 		roughness: 0.8,
+	// 		metalness: 0,
+	// 		side: THREE.DoubleSide,
+	// 	});
+	// 	return mat;
+	// }, [metalTexture]);
+
+	const stealMatcap = useTexture(`${baseUrl}/matcaps/steal5.2.png`);
+	stealMatcap.colorSpace = THREE.SRGBColorSpace;
 	const material = useMemo(() => {
-		const mat = new THREE.MeshStandardMaterial({
-			...metalTexture,
-			// color: "#bbbbbb",
-			color: "#999999",
-			roughness: 0.8,
-			metalness: 0,
-			side: THREE.DoubleSide,
+		const mat = new THREE.MeshMatcapMaterial({
+			// ... metalTexture,
+			color: "#ababab",
+			matcap: stealMatcap,
 		});
 		return mat;
-	}, [metalTexture]);
+	}, [metalTexture, stealMatcap]);
 
 	// dispose
 	useEffect(() => {
@@ -78,9 +90,113 @@ export default function Spatboard() {
 		};
 	}, [cylinderEnkelAs, ringEnkelAs, cylinderTweeAs, ringTweeAs, middenVlak]);
 
+	// load gltf model
+	const { nodes } = useGLTF(`${baseUrl}/models/spatbord3.glb`) as any;
+	const { nodes: nodes2 } = useGLTF(`${baseUrl}/models/spatbord4.glb`) as any;
+
 	return (
 		<>
-			<group position={[0, 0.02, 0]} scale={[1.1, 1.2, 1]}>
+			<group visible={frameLength <= 2.7}>
+				<group
+				name="Spatboard Left"
+				rotation-y={-Math.PI * 0.5}
+				scale={[0.15, 0.32, 0.2753]}
+				position={[0, -0.22, frameWidth / 2 + 0.161]}>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes.Cube.geometry}
+						material={material}
+						position={[0, 1.288, 0]}
+						scale={[0.745, 0.021, 1.989]}
+					/>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes.Cube001.geometry}
+						material={material}
+						position={[0, 1.288, 0]}
+						rotation={[0, 0, -Math.PI]}
+						scale={[-0.745, -0.021, -1.989]}
+					/>
+				</group>
+
+				<group
+				name="Spatboard Right"
+				rotation-y={Math.PI * 0.5}
+				scale={[0.15, 0.32, 0.2753]}
+				position={[0, -0.22, - (frameWidth / 2 + 0.161)]}>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes.Cube.geometry}
+						material={material}
+						position={[0, 1.288, 0]}
+						scale={[0.745, 0.021, 1.989]}
+					/>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes.Cube001.geometry}
+						material={material}
+						position={[0, 1.288, 0]}
+						rotation={[0, 0, -Math.PI]}
+						scale={[-0.745, -0.021, -1.989]}
+					/>
+				</group>
+			</group>
+
+			
+			<group visible={frameLength > 2.7}>
+				<group
+				name="Spatboard Left"
+				rotation-y={-Math.PI * 0.5}
+				scale={[0.15, 0.32, 0.308]}
+				position={[0, -0.22, frameWidth / 2 + 0.161]}>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes2.Cube.geometry}
+						material={material}
+						position={[0, 1.288, 0]}
+						scale={[0.745, 0.021, 1.989]}
+					/>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes2.Cube001.geometry}
+						material={material}
+						position={[0, 1.288, 0]}
+						rotation={[0, 0, -Math.PI]}
+						scale={[-0.745, -0.021, -1.989]}
+					/>
+				</group>
+				<group
+				name="Spatboard Left"
+				rotation-y={Math.PI * 0.5}
+				scale={[0.15, 0.32, 0.308]}
+				position={[0, -0.22, - (frameWidth / 2 + 0.161)]}>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes2.Cube.geometry}
+						material={material}
+						position={[0, 1.288, 0]}
+						scale={[0.745, 0.021, 1.989]}
+					/>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes2.Cube001.geometry}
+						material={material}
+						position={[0, 1.288, 0]}
+						rotation={[0, 0, -Math.PI]}
+						scale={[-0.745, -0.021, -1.989]}
+					/>
+				</group>
+			</group>
+
+			{/* <group position={[0, 0.02, 0]} scale={[1.1, 1.2, 1]}>
 				{frameLength <= 3 ? (
 					<>
 						<group>
@@ -229,7 +345,10 @@ export default function Spatboard() {
 						</group>
 					</>
 				)}
-			</group>
+			</group> */}
 		</>
 	);
 }
+
+useGLTF.preload(`${baseUrl}/models/spatbord3.glb`)
+useGLTF.preload(`${baseUrl}/models/spatbord4.glb`)

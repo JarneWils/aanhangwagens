@@ -7,6 +7,8 @@ import { shallow } from "zustand/shallow";
 import { baseUrl } from "../../global";
 import useMaterialState from "../stores/useMaterialState";
 import useButtonState from "../stores/useButtonState";
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { useSpecialGeometry } from "../hooks/useSpecialGeometry";
 
 export default function TrailerBed() {
 	/**
@@ -42,15 +44,15 @@ export default function TrailerBed() {
 
 	//wood texture
 	const woodTexture = useTexture({
-		map: `${baseUrl}/textures/wood/fine_grained_wood_col_4k.jpg`,
+		map: `${baseUrl}/textures/wood/fine_grained_wood_col_4k8.0.jpg`,
 		normalMap: `${baseUrl}/textures/wood/fine_grained_wood_nor_gl_4k.jpg`,
 		roughnessMap: `${baseUrl}/textures/wood/fine_grained_wood_rough_4k.jpg`,
 		aoMap: `${baseUrl}/textures/wood/fine_grained_wood_ao_4k.jpg`,
 	});
 	Object.values(woodTexture).forEach((texture) => {
-		texture.wrapS = THREE.MirroredRepeatWrapping;
-		texture.wrapT = THREE.MirroredRepeatWrapping;
-		texture.repeat.set(frameLength / 2, frameWidth);
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(2, 2);
 	});
 
 	//metal texture
@@ -61,10 +63,18 @@ export default function TrailerBed() {
 		aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
 	});
 	Object.values(metalTexture).forEach((texture) => {
-		texture.wrapS = THREE.MirroredRepeatWrapping;
-		texture.wrapT = THREE.MirroredRepeatWrapping;
-		texture.repeat.set(3, 1.5);
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(3, 3);
 	});
+	const stealMatcap = useTexture(`${baseUrl}/matcaps/steal6.6.png`);
+	stealMatcap.colorSpace = THREE.SRGBColorSpace;
+	
+	const woodMatcap = useTexture(`${baseUrl}/matcaps/wood5.png`);
+	woodMatcap.colorSpace = THREE.SRGBColorSpace
+	
+	const woodMatcapDark = useTexture(`${baseUrl}/matcaps/wood5.png`);
+	woodMatcapDark.colorSpace = THREE.SRGBColorSpace
 
 	/**
 	 * MATERIALS
@@ -74,13 +84,21 @@ export default function TrailerBed() {
 			map: woodTexture.map,
 			normalMap: woodTexture.normalMap,
 			roughnessMap: woodTexture.roughnessMap,
-			aoMap: woodTexture.aoMap,
-			color: "#CDB3BF",
-			roughness: 0.8,
-			metalness: 0.3,
+			// aoMap: woodTexture.aoMap,
+			color: "#9C8B86",
+			roughness: 0.9,
+			metalness: 0.4,
 		});
 		return mat;
 	}, [woodTexture]);
+	// const lightWoodMaterial = useMemo(() => {
+	// 	const mat = new THREE.MeshMatcapMaterial({
+	// 		... woodTexture,
+	// 		// color: "#EFD9D2",
+	// 		matcap: woodMatcap,
+	// 	});
+	// 	return mat;
+	// }, [woodMatcap, woodTexture]);
 
 	const darkWoodMaterial = useMemo(() => {
 		const mat = new THREE.MeshStandardMaterial({
@@ -88,30 +106,49 @@ export default function TrailerBed() {
 			normalMap: woodTexture.normalMap,
 			roughnessMap: woodTexture.roughnessMap,
 			aoMap: woodTexture.aoMap,
-			color: "#887788",
+			color: "#7D7D7D",
 			roughness: 0.8,
-			metalness: 0.1,
+			metalness: 0.3,
 		});
 		return mat;
 	}, [woodTexture]);
 
+	// const darkWoodMaterial = useMemo(() => {
+	// 	const mat = new THREE.MeshMatcapMaterial({
+	// 		... woodTexture,
+	// 		color: "#ccbec2",
+	// 		matcap: woodMatcapDark,
+	// 	});
+	// 	return mat;
+	// }, [woodMatcapDark, woodTexture]);
+
+	// const metalMaterial = useMemo(() => {
+	// 	const mat = new THREE.MeshStandardMaterial({
+	// 		map: metalTexture.map,
+	// 		normalMap: metalTexture.normalMap,
+	// 		roughnessMap: metalTexture.roughnessMap,
+	// 		aoMap: metalTexture.aoMap,
+	// 		color: "#cccccc",
+	// 		roughness: 0.5,
+	// 		metalness: 0.9,
+	// 	});
+	// 	return mat;
+	// }, [metalTexture]);
+
 	const metalMaterial = useMemo(() => {
-		const mat = new THREE.MeshStandardMaterial({
-			map: metalTexture.map,
-			normalMap: metalTexture.normalMap,
-			roughnessMap: metalTexture.roughnessMap,
-			aoMap: metalTexture.aoMap,
-			color: "#aaaaaa",
-			roughness: 1,
-			metalness: 0.2,
+		const mat = new THREE.MeshMatcapMaterial({
+			... metalTexture,
+			color: "#d9d9dd",
+			matcap: stealMatcap,
 		});
 		return mat;
-	}, [metalTexture]);
+	}, [stealMatcap, metalTexture]);
 
+	console.log(plankMaterialWoodLight)
 
 	let plankMaterial = lightWoodMaterial;
-	if(plankMaterialWoodLight === true){plankMaterial = lightWoodMaterial}
 	if(plankMaterialWoodDark === true){plankMaterial = darkWoodMaterial}
+	if(plankMaterialWoodLight === true){plankMaterial = lightWoodMaterial}
 	if(plankMaterialMetal === true){plankMaterial = metalMaterial}
 
 
@@ -119,15 +156,17 @@ export default function TrailerBed() {
 	 * MESHES
 	 */
 	const plank = useMemo(() => {
-		const geo = new THREE.BoxGeometry();
+		const geo = new RoundedBoxGeometry(1, 1, 1, 1, 0.02);
 		return geo;
 	}, []);
 
-	const plankBottom = useMemo(() => {
-		const geo = new THREE.BoxGeometry();
-		return geo;
-	}, []);
+	const plankBottom = useSpecialGeometry(frameLength - 0.04, 0.02, frameWidth + 0.04, 8, 0);
 
+	const plankSide = useSpecialGeometry(frameLength - 0.01, plankHeight, 0.02, 8, 0.001);
+
+	const plankFront = useSpecialGeometry(frameWidth + 0.04, plankHeight, 0.02, 8, 0.001);
+
+	const plankBack = useSpecialGeometry(frameWidth - 0.01, plankHeight - 0.01, 0.02, 8, 0.001);
 
 	/**
 	 * SCRIPTS
@@ -172,27 +211,24 @@ export default function TrailerBed() {
 			<mesh
 				name="left-side"
 				castShadow
-				geometry={plank}
+				geometry={plankSide}
 				material={plankMaterial}
-				position={[0, (plankHeight + 0.05) / 2, frameWidth / 2 + 0.03]}
-				scale={[frameLength - 0.01, plankHeight, 0.02]}
+				position={[0, (plankHeight + 0.05) / 2, frameWidth / 2 + 0.02]}
 			/>
 			<mesh
 				name="right-side"
 				castShadow
-				geometry={plank}
+				geometry={plankSide}
 				material={plankMaterial}
-				position={[0, (plankHeight + 0.05) / 2, -(frameWidth / 2) - 0.03]}
-				scale={[frameLength - 0.01, plankHeight, 0.02]}
+				position={[0, (plankHeight + 0.05) / 2, -(frameWidth / 2) - 0.02]}
 			/>
 			<mesh
 				name="front-side"
 				castShadow
-				geometry={plank}
+				geometry={plankFront}
 				material={plankMaterial}
 				rotation-y={Math.PI * 0.5}
 				position={[-(frameLength / 2) + 0.02, (plankHeight + 0.05) / 2, 0]}
-				scale={[frameWidth + 0.04, plankHeight, 0.02]}
 			/>
 			<mesh
 				name="back-side"
@@ -201,7 +237,7 @@ export default function TrailerBed() {
 				onPointerOut={() => setHovered(false)}
 				onClick={handleClickGate} 
 				castShadow
-				geometry={plank}
+				geometry={plankBack}
 				material={plankMaterial}
 				rotation-y={Math.PI * 0.5}
 				position={[
@@ -209,14 +245,13 @@ export default function TrailerBed() {
 					gateOpen ? - ((plankHeight + 0.03) / 2 + 0.01) : (plankHeight + 0.03) / 2 + 0.01,
 					0
 				]}
-				scale={[frameWidth - 0.01, plankHeight - 0.01, 0.02]}
 			/>
 			<mesh
 				name="back-side-hover"
 				ref={backSideRef}
 				onClick={handleClickGate} 
 				castShadow
-				geometry={plank}
+				geometry={plankBack}
 				material={hoverMaterial}
 				rotation-y={Math.PI * 0.5}
 				position={[
@@ -224,7 +259,6 @@ export default function TrailerBed() {
 					gateOpen ? - ((plankHeight + 0.03) / 2 + 0.01) : (plankHeight + 0.03) / 2 + 0.01,
 					0
 				]}
-				scale={[frameWidth - 0.01, plankHeight - 0.01, 0.02]}
 			/>
 			<mesh
 				name="bottom"
@@ -233,7 +267,6 @@ export default function TrailerBed() {
 				geometry={plankBottom}
 				material={plankMaterial}
 				position={[0, 0.035, 0]}
-				scale={[frameLength - 0.04, 0.02, frameWidth + 0.04]}
 			/>
 		</>
 	);

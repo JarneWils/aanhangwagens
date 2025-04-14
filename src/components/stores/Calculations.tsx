@@ -43,7 +43,7 @@ export default function Calculations() {
 	// prices
 	const woodPrice = plankMaterialWoodLight ? 10 : plankMaterialWoodDark ? 6.81 : plankMaterialMetal ? 35 : 0; // €/m²
 	const metalPrice = 35; // €/m²
-	let axlePrice = 400; // €
+	let axlePrice = 500; // €
 	const koppelstukPrice = 75; // €
 	const noseWheelPrice = 60; // €
 	let jockeyWheelPrice = 60; // €
@@ -92,7 +92,7 @@ export default function Calculations() {
 	const widthPlankWeight = areaWidthPlank * woodWeight * 2;
 
 	// Axle count
-	if (frameLength <= 3) {
+	if (frameLength <= 2.7) {
 		axleWeight = 80;
 	} else {
 		axleWeight = axleWeight * 2;
@@ -227,7 +227,7 @@ export default function Calculations() {
 	const totalMetalPrice = totalMetalArea * metalPrice;
 
 	//AXLES
-	if (frameLength <= 3) {
+	if (frameLength <= 2.7) {
 		axlePrice = axlePrice;
 	} else {
 		axlePrice = axlePrice * 2;

@@ -15,19 +15,21 @@ import Canopy from "../accessoires/Canopy.tsx";
 import LoadingRamps from "../accessoires/LoadingRamps.tsx";
 // import useButtonState from "../stores/useButtonState.tsx";
 // import { shallow } from "zustand/shallow";
-import { useTexture } from "@react-three/drei";
+import { Environment, useTexture } from "@react-three/drei";
 import { baseUrl } from "../../global.ts";
 import * as THREE from "three";
+import useButtonState from "../stores/useButtonState.tsx";
+import { shallow } from "zustand/shallow";
+import Nose from "./Nose.tsx";
 
 export default function MainTrailer() {
 	
-	// const {screenShot} = useButtonState(
-	// 	(state) => ({
-	// 		darkMode: state.darkMode,
-	// 		screenShot: state.screenShot,
-	// 	}),
-	// 	shallow
-	// );
+	const {darkMode} = useButtonState(
+		(state) => ({
+			darkMode: state.darkMode,
+		}),
+		shallow
+	);
 
 	// GRASS TEXTURE
 	const grassTexture = useTexture({
@@ -42,16 +44,26 @@ export default function MainTrailer() {
 		texture.repeat.set(25, 25);
 	});
 
+
 	return (
 		<>
 			<EffectComposer multisampling={8}>
-				<N8AO aoRadius={10} distanceFalloff={0.2} intensity={4} screenSpaceRadius renderMode={0} />
+				<N8AO halfRes={false} aoRadius={18} distanceFalloff={0.2} intensity={4} screenSpaceRadius renderMode={0} />
 				<ToneMapping mode={ToneMappingMode.NEUTRAL} />
-				<BrightnessContrast contrast={0.12} brightness={-0.01} />
+				<BrightnessContrast contrast={0.12} brightness={-0.02} />
 			</EffectComposer>
+
+			<Environment
+				files={`${baseUrl}/img/environment2.jpg`}
+				environmentIntensity={ darkMode ? 1.5 : 3.5}
+			/>
+
+			{/* <Environment preset="city" /> */}
+
 			{/* TRAILER BASIC */}
 			<Chassis />
 			<TrailerNose />
+			<Nose />
 			<Wheels />
 			<Spatboard />
 			<TrailerBed />

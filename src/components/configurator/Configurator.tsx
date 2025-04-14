@@ -21,16 +21,18 @@ import OrderSection from "./OrderSection";
 import useMeasurements from "../stores/useMeasurements";
 import Payment from "./Payment";
 import PopUp from "./PopUp";
+import SaveFile from "./SaveFile";
 
 export default function Configurator() {
 	// FULL SCREEN
-	const { fullScreen, setFullScreen, darkMode, setDarkMode, paying, savePdf } = useButtonState((state) => ({
+	const { fullScreen, setFullScreen, darkMode, setDarkMode, paying, savePdf, saveFile } = useButtonState((state) => ({
 		fullScreen: state.fullScreen,
 		setFullScreen: state.setFullScreen,
 		darkMode: state.darkMode,
 		setDarkMode: state.setDarkMode,
 		paying: state.paying,
 		savePdf: state.savePdf,
+		saveFile: state.saveFile,
 		}),
 		shallow
 	);
@@ -90,13 +92,14 @@ export default function Configurator() {
 
 		<button className="sva-btn"
 		onClick={onHandleDarkMode}
-		style={{ opacity: savePdf === false && paying === false ? 1 : 0, display: window.innerWidth < 900 ?  "block" : "none", position: "absolute", top: "100px", right: "0px", zIndex: "1000", color: paying === true && savePdf === false ? "var(--color-accent)" : undefined }}>	
+		style={{ opacity: savePdf === false && paying === false && saveFile === false ? 1 : 0, display: window.innerWidth < 900 ?  "block" : "none", position: "absolute", top: "100px", right: "0px", zIndex: "1000", color: paying === true && savePdf === false ? "var(--color-accent)" : undefined }}>	
 			{darkMode === false ? <LuMoonStar /> : <MdOutlineWbSunny style={{fontSize: "1.2em"}}/>}
 		</button>
 
 		<div className="gredient-right"></div>
 			<Form />
 			<Payment />
+			<SaveFile />
 			
 			{/* PopUp */}
 			{innerWidth < 900 ? <PopUp invert={true}/> : null}
@@ -112,7 +115,7 @@ export default function Configurator() {
 					<div className="header-title">Create your trailer</div>
 					<div className="header-subtitle">Trailer Configurator</div>
 				</div>
-				<div style={{opacity: savePdf === false && paying === false ? 1 : 0}}>
+				<div style={{opacity: savePdf === false && paying === false && saveFile === false ? 1 : 0}}>
 					<button className="fullScreenButton" onClick={handleClickFullScreen}>
 						<div className="fullScreenButton-icon">
 							<GoScreenFull />

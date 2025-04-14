@@ -46,7 +46,7 @@ export default function TextureButtons({ name }: { name: string }) {
 		const urlMetal = params.get('metal') || '';
 
 		if (!window.location.search) {
-			setPlankMaterialWoodLight(true);
+			setPlankMaterialWoodDark(true);
 		} else {
 			if (urlWoodLight === '1'){setPlankMaterialWoodLight(true)} else {setPlankMaterialWoodLight(false)};
 			if (urlWoodDark === '1'){setPlankMaterialWoodDark(true)} else {setPlankMaterialWoodDark(false)};

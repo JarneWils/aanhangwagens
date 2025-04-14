@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import React from "react";
 import { baseUrl } from "../../global";
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 
 export default function MeshSides() {
 	// MEASUREMENTS
@@ -50,6 +51,9 @@ export default function MeshSides() {
 		texture.repeat.set(2, 0.2);
 	});
 
+	const stealMatcap = useTexture(`${baseUrl}/matcaps/steal6.5.png`);
+	stealMatcap.colorSpace = THREE.SRGBColorSpace;
+
 	// MATERIALS
 	const raster = useMemo(() => {
 		const mat = new THREE.MeshStandardMaterial({
@@ -64,26 +68,41 @@ export default function MeshSides() {
 
 	const raster2 = useMemo(() => {
 		const mat = new THREE.MeshStandardMaterial({
-			color: "#999999",
+			color: "#9999a0",
 			roughness: 0.6,
 			metalness: 0.5,
+			// specularColor: "#ffffff",
+			// iridescence: 1,
+			// iridescenceIOR: 1,
+			// reflectivity: 1,
+
+
 		});
 		return mat;
 	}, []);
 
+	// const metal = useMemo(() => {
+	// 	const mat = new THREE.MeshStandardMaterial({
+	// 		...metalTexture,
+	// 		color: "#FFFFFF",
+	// 		roughness: 0.4,
+	// 		metalness: 0.5,
+	// 	});
+	// 	return mat;
+	// }, [metalTexture]);
+
 	const metal = useMemo(() => {
-		const mat = new THREE.MeshStandardMaterial({
-			...metalTexture,
-			color: "#FFFFFF",
-			roughness: 0.4,
-			metalness: 0.4,
+		const mat = new THREE.MeshMatcapMaterial({
+			... metalTexture,
+			color: "#ffffff",
+			matcap: stealMatcap,
 		});
 		return mat;
-	}, [metalTexture]);
+	}, [metalTexture, stealMatcap]);
 
 	// GEOMETRIES
 	const square = useMemo(() => {
-		const geo = new THREE.BoxGeometry();
+		const geo = new RoundedBoxGeometry(1, 1, 1, 1, 0.02);
 		return geo;
 	}, []);
 
@@ -148,7 +167,7 @@ export default function MeshSides() {
 					geometry={square}
 					material={metal}
 					scale={[frameLength - 0.01, 0.05, 0.02]}
-					position={[0 + 0.005, plankHeight + 0.55, frameWidth / 2 + 0.03]}
+					position={[0 + 0.005, plankHeight + 0.55, frameWidth / 2 + 0.02]}
 				/>
 				<mesh
 					castShadow
@@ -156,7 +175,7 @@ export default function MeshSides() {
 					geometry={square}
 					material={metal}
 					scale={[0.4, 0.05, 0.02]}
-					position={[frameLength / 2 - 0.025, plankHeight + 0.325, frameWidth / 2 + 0.03]}
+					position={[frameLength / 2 - 0.025, plankHeight + 0.325, frameWidth / 2 + 0.02]}
 					rotation-z={Math.PI * 0.5}
 				/>
 				<mesh
@@ -165,7 +184,7 @@ export default function MeshSides() {
 					geometry={square}
 					material={metal}
 					scale={[frameLength - 0.01, 0.05, 0.02]}
-					position={[0 + 0.005, plankHeight + 0.55, -(frameWidth / 2 + 0.03)]}
+					position={[0 + 0.005, plankHeight + 0.55, -(frameWidth / 2 + 0.02)]}
 				/>
 				<mesh
 					castShadow
@@ -173,7 +192,7 @@ export default function MeshSides() {
 					geometry={square}
 					material={metal}
 					scale={[0.4, 0.05, 0.02]}
-					position={[frameLength / 2 - 0.025, plankHeight + 0.325, -(frameWidth / 2 + 0.03)]}
+					position={[frameLength / 2 - 0.025, plankHeight + 0.325, -(frameWidth / 2 + 0.02)]}
 					rotation-z={Math.PI * 0.5}
 				/>
 				<group>
@@ -187,7 +206,7 @@ export default function MeshSides() {
 									geometry={cylinder}
 									material={raster2}
 									scale={[0.004, 0.45, 0.004]}
-									position={[positionX, plankHeight + 0.325, frameWidth / 2 + 0.03]}
+									position={[positionX, plankHeight + 0.325, frameWidth / 2 + 0.02]}
 								/>
 								<mesh
 									castShadow
@@ -195,7 +214,7 @@ export default function MeshSides() {
 									geometry={cylinder}
 									material={raster2}
 									scale={[0.004, 0.45, 0.004]}
-									position={[positionX, plankHeight + 0.325, -(frameWidth / 2 + 0.03)]}
+									position={[positionX, plankHeight + 0.325, -(frameWidth / 2 + 0.02)]}
 								/>
 							</React.Fragment>
 						);
@@ -212,7 +231,7 @@ export default function MeshSides() {
 									material={raster2}
 									scale={[0.004, frameLength - 0.01, 0.004]}
 									rotation-z={Math.PI * 0.5}
-									position={[0, positionY + 0.15, frameWidth / 2 + 0.03]}
+									position={[0, positionY + 0.15, frameWidth / 2 + 0.02]}
 								/>
 								<mesh
 									castShadow
@@ -221,7 +240,7 @@ export default function MeshSides() {
 									material={raster2}
 									scale={[0.004, frameLength - 0.01, 0.004]}
 									rotation-z={Math.PI * 0.5}
-									position={[0, positionY + 0.15, -(frameWidth / 2 + 0.03)]}
+									position={[0, positionY + 0.15, -(frameWidth / 2 + 0.02)]}
 								/>
 							</React.Fragment>
 						);
@@ -252,7 +271,8 @@ export default function MeshSides() {
 									name={`raster-H-R${i}`}
 									geometry={cylinder}
 									material={raster2}
-									scale={[0.004, 0.004, frameWidth / 2 + 0.02]}
+									rotation={[Math.PI * 0.5, 0, 0]}
+									scale={[0.004, frameWidth + 0.02, 0.004]}
 									position={[-(frameLength / 2 - 0.01), positionY + 0.15, 0]}
 								/>
 							</React.Fragment>

@@ -149,7 +149,7 @@ export default function Canopy() {
 				>
 					<meshStandardMaterial
 						{...leatherTexture}
-						color="#acacab"
+						color="#999999"
 						roughness={1}
 						metalness={0.2}
 						side={THREE.DoubleSide}

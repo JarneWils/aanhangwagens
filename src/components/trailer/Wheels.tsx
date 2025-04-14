@@ -37,6 +37,16 @@ export default function Wheels() {
 		return geo;
 	}, []);
 
+	const tireMaterial = useMemo(() => {
+		const mat = new THREE.MeshStandardMaterial({
+			color: '#ccccdc',
+			roughness: 0.1,
+			metalness: 0.9,
+			side: THREE.DoubleSide,
+		})
+		return mat
+	}, [])
+
 	useEffect(() => {
 		return () => {
 			buis.dispose();
@@ -47,14 +57,14 @@ export default function Wheels() {
 	// MODEL
 	const { nodes, materials } = useGLTF(`${baseUrl}/models/tire-v1.glb`) as any;
 	const tireGeometry = useMemo(() => nodes.Circle002.geometry, [nodes]);
-	const tireMaterial = useMemo(() => materials["Material.001"], [materials]);
+	// const tireMaterial = useMemo(() => materials["Material.001"], [materials]);
 	const rimGeometry = useMemo(() => nodes.Cube002.geometry, [nodes]);
 	const rimMaterial = useMemo(() => materials["Material.002"], [materials]);
 
 	return (
 		<>
 			{/* Linker wiel */}
-			<group position-x={frameLength > 3 ? -0.35 : 0}>
+			<group position-x={frameLength > 2.7 ? -0.35 : 0}>
 				<group
 					dispose={null}
 					scale={0.15}
@@ -187,7 +197,7 @@ export default function Wheels() {
 					/>
 				</group>
 			</group>
-			{frameLength > 3 ? (
+			{frameLength > 2.7 ? (
 				<group position-x={0.35}>
 					<group
 						dispose={null}

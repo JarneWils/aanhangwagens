@@ -772,6 +772,31 @@ PDF ----------------------------------------------------------------------------
 	cursor: pointer;
 	text-align: center;
 }
+.file-import-btn {
+	width: 128px;
+	height: 32px;
+	padding: 8px 24px;
+	margin-right: 24px;
+	background-color: var(--color-accent);
+	color: var(--color-white);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.9em;
+	border: none;
+	border-radius: 6px;
+	box-shadow: var(--shadow-big-box);
+	cursor: pointer;
+	text-align: center;
+	transition: 0.1s ease-in-out;
+}
+.file-import-btn:hover {
+	background-color: var(--color-white);
+	color: var(--color-accent);
+	border: 1.5pt solid var(--color-accent);
+	border-radius: 6px;
+	box-shadow: var(--shadow-big-box);
+	cursor: pointer;
+	text-align: center;
+}
 
 .save-visible {
 	width: 300px;

@@ -31,6 +31,9 @@ interface ButtonState {
 	paying: boolean;
 	setPaying: (newPaying: boolean) => void;
 
+	saveFile: boolean;
+	setSaveFile: (newSaveFile: boolean) => void;
+
 	darkMode: boolean;
 	setDarkMode: (newDarkMode: boolean) => void;
 
@@ -74,6 +77,9 @@ const useButtonState = createWithEqualityFn<ButtonState>((set) => ({
 
 	screenShot: false,
 	setScreenShot: (newScreenShot) => set({ screenShot: newScreenShot }),
+
+	saveFile: false,
+	setSaveFile: (newSaveFile) => set({ saveFile: newSaveFile }),
 }));
 
 export default useButtonState;

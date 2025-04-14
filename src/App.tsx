@@ -27,7 +27,7 @@ export default function App() {
 		}),
 		shallow
 	);
-	const centeredPosition: [number, number, number] = [-4, 1, 4];
+	const centeredPosition: [number, number, number] = [-3, 1, 5];
 	
 
 	//camera position look at y of 2

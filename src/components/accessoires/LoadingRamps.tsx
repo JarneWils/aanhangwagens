@@ -50,28 +50,49 @@ export default function LoadingRamps() {
 		return clonedTextures;
 	}, [antislipMetalTexture]);
 
+	const stealMatcap = useTexture(`${baseUrl}/matcaps/steal6.4.png`);
+	stealMatcap.colorSpace = THREE.SRGBColorSpace;
+
 	/**
 	 * MATERIALS
 	 */
+	// const antislipMetal = useMemo(() => {
+	// 	const mat = new THREE.MeshStandardMaterial({
+	// 		... antislipMetalTexture,
+	// 		color: "#c5c5cd",
+	// 		metalness: 0.5,
+	// 		roughness: 0.8,
+	// 	})
+	// 	return mat;
+	// }, [antislipMetalTexture]);
+
+	// const antislipMetal2 = useMemo(() => {
+	// 	const mat = new THREE.MeshStandardMaterial({
+	// 		... antislipMetalTexture2,
+	// 		color: "#c5c5cd",
+	// 		metalness: 0.2,
+	// 		roughness: 0.2,
+	// 	})
+	// 	return mat;
+	// }, [antislipMetalTexture2]);
+
 	const antislipMetal = useMemo(() => {
-		const mat = new THREE.MeshStandardMaterial({
+		const mat = new THREE.MeshMatcapMaterial({
 			... antislipMetalTexture,
-			color: "#c5c5cd",
-			metalness: 0.5,
-			roughness: 0.8,
-		})
+			color: "#ffffff",
+			matcap: stealMatcap,
+		});
 		return mat;
-	}, [antislipMetalTexture]);
+	}, [antislipMetalTexture, stealMatcap]);
 
 	const antislipMetal2 = useMemo(() => {
-		const mat = new THREE.MeshStandardMaterial({
+		const mat = new THREE.MeshMatcapMaterial({
 			... antislipMetalTexture2,
-			color: "#c5c5cd",
-			metalness: 0.2,
-			roughness: 0.2,
-		})
+			color: "#ffffff",
+			matcap: stealMatcap,
+		});
 		return mat;
-	}, [antislipMetalTexture2]);
+	}, [antislipMetalTexture2, stealMatcap]);
 
 	/**
 	 * GEOMETRIES

@@ -8,7 +8,7 @@ import { LiaDiceSolid } from "react-icons/lia";
 // import { MdOutlineWbSunny } from "react-icons/md";
 
 export default function ExtraButtons() {
-	const { setSavePdf, savePdf, paying, setPaying, /* darkMode, setDarkMode */ setJockeyWheel, setMeshSideState, setSpareWheel, setCanopy, setLoadingRamps, setGateOpen } = useButtonState(
+	const { setSavePdf, savePdf, paying, setPaying, setSaveFile, saveFile, /* darkMode, setDarkMode */ setJockeyWheel, setMeshSideState, setSpareWheel, setCanopy, setLoadingRamps, setGateOpen} = useButtonState(
 		(state) => ({
 			setSavePdf: state.setSavePdf,
 			savePdf: state.savePdf,
@@ -22,7 +22,10 @@ export default function ExtraButtons() {
 			canopy: state.canopy,
 			meshSideState: state.meshSideState,
 			setGateOpen: state.setGateOpen,	
-			loadingRamps: state.loadingRamps,	
+			loadingRamps: state.loadingRamps,
+			spareWheel: state.spareWheel,
+			setSaveFile: state.setSaveFile,
+			saveFile: state.saveFile,
 			// darkMode: state.darkMode,
 			// setDarkMode: state.setDarkMode,
 		}),
@@ -37,21 +40,24 @@ export default function ExtraButtons() {
 		}),
 		shallow
 	);
+	
 
 	const onHandleConfigurator = useCallback(() => {
 		setSavePdf(false);
 		setPaying(false);
-	}, [setSavePdf, setPaying]);
+		setSaveFile(false);
+	}, [setSavePdf, setPaying, setSaveFile]);
 
 	const onHandleForm = useCallback(() => {
 		setSavePdf(true);
 		setPaying(false);
-	}, [setSavePdf, setPaying]);
+		setSaveFile(false);
+	}, [setSavePdf, setPaying, setSaveFile]);
 
-	const onHandlePayment = useCallback(() => {
-		setSavePdf(false);
-		setPaying(true);
-	}, [setSavePdf, setPaying]);
+	// const onHandlePayment = useCallback(() => {
+	// 	setSavePdf(false);
+	// 	setPaying(true);
+	// }, [setSavePdf, setPaying]);
 
 	
 	// const root = document.getElementById("root");
@@ -125,6 +131,14 @@ export default function ExtraButtons() {
 	}, [setFrameLength, setFrameWidth, setPlankHeight]);
 
 
+
+	const onHandleSave = useCallback(() => {
+		setSaveFile(true);
+		setSavePdf(false);
+		setPaying(false);
+	}, [setSavePdf, setPaying, setSaveFile]);
+
+
 	return (
 		<>
 			<div className="extra-buttons-container" style={{display: innerWidth > 950 ? 'flex' : 'none'}}>
@@ -143,23 +157,31 @@ export default function ExtraButtons() {
 					<button
 						className="sva-btn"
 						onClick={onHandleConfigurator}
-						style={{color: savePdf === false && paying === false ? "var(--color-accent)" : undefined}}>
+						style={{color: savePdf === false && paying === false && saveFile === false ? "var(--color-accent)" : undefined}}>
 						Configurator
 					</button>
 				</div>
 				<div className="extra-btn">
 					<button className="sva-btn"
 						onClick={onHandleForm}
-						style={{ color: savePdf === true && paying === false ? "var(--color-accent)" : undefined }}>
+						style={{ color: savePdf === true && paying === false && saveFile === false ? "var(--color-accent)" : undefined }}>
 						Form
 					</button>
 				</div>
-				<div className="extra-btn">
+				{/* <div className="extra-btn">
 					<button className="sva-btn"
 					onClick={onHandlePayment}
 					style={{ color: paying === true && savePdf === false ? "var(--color-accent)" : undefined }}
 					>	
 						Payment
+					</button>
+				</div> */}
+				<div className="extra-btn">
+					<button className="sva-btn"
+						onClick={onHandleSave}
+						style={{
+							color: savePdf === false && paying === false && saveFile === true ? "var(--color-accent)" : undefined}}>	
+						File
 					</button>
 				</div>
 				{/* <div className="extra-btn">

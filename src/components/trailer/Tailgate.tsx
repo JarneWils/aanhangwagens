@@ -78,7 +78,8 @@ export default function Tailgate() {
 
 	return (
 		<>
-			<group name="hinge-left" position-z={frameWidth / 3 - 0.05}>
+		
+			{/* <group name="hinge-left" position-z={frameWidth / 3 - 0.05}>
 				<mesh
 					name="cylinder"
 					geometry={cylinder}
@@ -173,7 +174,7 @@ export default function Tailgate() {
 					-(frameWidth / 2 + 0.03)
 				]}
 				scale={[0.015, 0.06, 0.005]}
-			/>
+			/> */}
 		</>
 	);
 }

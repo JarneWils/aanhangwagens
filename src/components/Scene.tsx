@@ -10,7 +10,6 @@ import useThreeStore from "./stores/useThreeStore";
 import { useThree } from "@react-three/fiber";
 import "../style.css";
 import { shallow } from "zustand/shallow";
-import useMeasurements from "./stores/useMeasurements";
 
 export default function Scene() {
 	const { gl, scene } = useThree();
@@ -30,12 +29,6 @@ export default function Scene() {
 		}),
 		shallow
 	);
-	const {frameLength} = useMeasurements(
-		(state) => ({
-			frameLength: state.frameLength,
-		}),
-		shallow
-	);
 
 	return (
 		<>
@@ -43,10 +36,10 @@ export default function Scene() {
 		{darkMode === true ? <fog attach="fog" args={["#505050", 16, 25]} /> : null}
 
 			<OrbitControls
-				target={ screenShot === true ? [0,-0.3,0] : [0.75 - frameLength / 5,-0.15,0]}
+				target={ screenShot === true ? [0,-0.3,0] : fullScreen === true ? [0,0.2,0] : [0,-0.2,0]}
 				maxPolarAngle={Math.PI / 2}
 				enableZoom={true}
-				minDistance={fullScreen ? 1.5 : 4}
+				minDistance={fullScreen ? 1 : 2.5}
 				maxDistance={16}
 			/>
 
