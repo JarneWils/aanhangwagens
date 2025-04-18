@@ -51,7 +51,17 @@ export default function OrderSection() {
 		setSavePdf(!savePdf);
 	}, [setSavePdf, savePdf]);
 
-	const imgPath = plankMaterialWoodLight ? `${baseUrl}/img/woodLight.png` : plankMaterialWoodDark ? `${baseUrl}/img/woodDark.png` : plankMaterialMetal ? `${baseUrl}/img/metal.png` : "";
+	const imgPath = plankMaterialWoodLight ? `${baseUrl}/img/woodLight.png` : plankMaterialWoodDark ? `${baseUrl}/img/woodDark.png` : plankMaterialMetal ? `${baseUrl}/img/metal.png` : undefined;
+
+	const totalLength = ((frameLength + 1).toFixed(2)).replace('.', ',');
+	const totalWidth = ((frameWidth + 0.5).toFixed(2)).replace('.', ',');
+	const totalHeight = ((plankHeight + 0.72 + 1).toFixed(2)).replace('.', ',');
+
+	const formatPrice = new Intl.NumberFormat("nl-BE", {
+		style: "currency",
+		currency: "EUR",
+		minimumFractionDigits: 2,
+	}).format(totalPriceRounded);
 
 	return(
 		<div className="order-section-container">
@@ -60,7 +70,7 @@ export default function OrderSection() {
 				{/* SIZE */}
 				<div className="order-section-item">
 					<p className="order-section-subtitle">Size:</p>
-					<p className="order-section-text">{(frameLength + 1.2).toFixed(2)} x {(frameWidth + 0.5).toFixed(2)} x {(plankHeight + 0.72 + 1).toFixed(2)} m</p>
+					<p className="order-section-text">{totalLength} x {totalWidth} x {totalHeight} m</p>
 				</div>
 				{/* WEIGHT */}
 				<div className="order-section-item">
@@ -78,34 +88,34 @@ export default function OrderSection() {
 						<p className="order-section-text">Light Wood</p>
 						<p className="order-section-text">multiplex</p>
 						</>
-					) : ""}
+					) : null}
 					{plankMaterialWoodDark ? (
 						<>
 						<p className="order-section-text">Dark Wood</p>
 						<p className="order-section-text">multiplex</p>
 						</>
-					) : ""}
+					) : null}
 					{plankMaterialMetal ? (
 						<>
 						<p className="order-section-text">Metal</p>
 						<p className="order-section-text">multiplex</p>
 						</>
-					) : ""}
+					) : null}
 				</div>
 				{/* ACCESSOIRES */}
 				<div className="order-section-item">
 					<p className="order-section-subtitle">Accessores:</p>
-					<p className="order-section-text">{jockeyWheel ? "jockey wheel," : ""}</p>
-					<p className="order-section-text">{meshSideState ? "mesh side," : ""}</p>
-					<p className="order-section-text">{spareWheel ? "spare wheel," : ""}</p>
-					<p className="order-section-text">{canopy ? "canopy," : ""}</p>
-					<p className="order-section-text">{loadingRamps ? "loading ramps," : ""}</p>
+					<p className="order-section-text">{jockeyWheel ? "jockey wheel," : null}</p>
+					<p className="order-section-text">{meshSideState ? "mesh side," : null}</p>
+					<p className="order-section-text">{spareWheel ? "spare wheel," : null}</p>
+					<p className="order-section-text">{canopy ? "canopy," : null}</p>
+					<p className="order-section-text">{loadingRamps ? "loading ramps," : null}</p>
 				</div>
 			</div>
 			{/* PRICE */}
 			<div className="order-section-flex">
 				<div className="order-section-flex-item">
-					<p><IoPricetagsOutline style={{fontSize: "1.2em", marginRight: "16px", marginBottom: "-4px"}}/>€ {totalPriceRounded}</p>
+					<p><IoPricetagsOutline style={{fontSize: "1.2em", marginRight: "16px", marginBottom: "-4px"}}/>{formatPrice}</p>
 				</div>
 				<div className="order-section-flex-item">
 					<button className="order-section-btn" onClick={onHandleSave}> Save <IoArrowForwardOutline className="form-submit-btn-icon" /></button>

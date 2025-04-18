@@ -99,6 +99,8 @@ export default function Spatboard() {
 			<group visible={frameLength <= 2.7}>
 				<group
 				name="Spatboard Left"
+				castShadow
+				receiveShadow
 				rotation-y={-Math.PI * 0.5}
 				scale={[0.15, 0.32, 0.2753]}
 				position={[0, -0.22, frameWidth / 2 + 0.161]}>
@@ -123,6 +125,8 @@ export default function Spatboard() {
 
 				<group
 				name="Spatboard Right"
+				castShadow
+				receiveShadow
 				rotation-y={Math.PI * 0.5}
 				scale={[0.15, 0.32, 0.2753]}
 				position={[0, -0.22, - (frameWidth / 2 + 0.161)]}>
@@ -150,6 +154,8 @@ export default function Spatboard() {
 			<group visible={frameLength > 2.7}>
 				<group
 				name="Spatboard Left"
+				castShadow
+				receiveShadow
 				rotation-y={-Math.PI * 0.5}
 				scale={[0.15, 0.32, 0.308]}
 				position={[0, -0.22, frameWidth / 2 + 0.161]}>
@@ -172,7 +178,9 @@ export default function Spatboard() {
 					/>
 				</group>
 				<group
-				name="Spatboard Left"
+				name="Spatboard Right"
+				castShadow
+				receiveShadow
 				rotation-y={Math.PI * 0.5}
 				scale={[0.15, 0.32, 0.308]}
 				position={[0, -0.22, - (frameWidth / 2 + 0.161)]}>

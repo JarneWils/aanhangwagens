@@ -59,8 +59,8 @@ export default function TrailerBed() {
 	const metalTexture = useTexture({
 		map: `${baseUrl}/textures/metal2.0/concrete_floor_02_ao_4k.jpg`,
 		normalMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_nor_gl_4k.jpg`,
-		roughnessMap: `${baseUrl}/textures/metal2.0/concrete_floor_02_rough_4k.jpg`,
-		aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
+		// roughnessMap: `${baseUrl}/textures/metal2.0/concrete_floor_02_rough_4k.jpg`,
+		// aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
 	});
 	Object.values(metalTexture).forEach((texture) => {
 		texture.wrapS = THREE.RepeatWrapping;
@@ -143,8 +143,6 @@ export default function TrailerBed() {
 		});
 		return mat;
 	}, [stealMatcap, metalTexture]);
-
-	console.log(plankMaterialWoodLight)
 
 	let plankMaterial = lightWoodMaterial;
 	if(plankMaterialWoodDark === true){plankMaterial = darkWoodMaterial}
@@ -241,7 +239,7 @@ export default function TrailerBed() {
 				material={plankMaterial}
 				rotation-y={Math.PI * 0.5}
 				position={[
-					gateOpen ? (frameLength / 2 + 0.03) : (frameLength / 2 - 0.01),
+					gateOpen ? (frameLength / 2 + 0.02) : (frameLength / 2 - 0.01),
 					gateOpen ? - ((plankHeight + 0.03) / 2 + 0.01) : (plankHeight + 0.03) / 2 + 0.01,
 					0
 				]}
@@ -255,7 +253,7 @@ export default function TrailerBed() {
 				material={hoverMaterial}
 				rotation-y={Math.PI * 0.5}
 				position={[
-					gateOpen ? (frameLength / 2 + 0.03) : (frameLength / 2 - 0.01),
+					gateOpen ? (frameLength / 2 + 0.02) : (frameLength / 2 - 0.01),
 					gateOpen ? - ((plankHeight + 0.03) / 2 + 0.01) : (plankHeight + 0.03) / 2 + 0.01,
 					0
 				]}

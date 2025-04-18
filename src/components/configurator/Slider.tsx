@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Slider({
 	value,
@@ -13,6 +13,10 @@ export default function Slider({
 }) {
 	// Lokale state om tijdelijke input op te slaan
 	const [inputValue, setInputValue] = useState(value.toFixed(2));
+
+	useEffect(() => {
+		setInputValue(value.toFixed(2));
+	}, [value]);
 
 	// Bij het slepen van de slider direct updaten
 	const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {

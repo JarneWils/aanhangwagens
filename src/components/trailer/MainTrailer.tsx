@@ -9,27 +9,16 @@ import MeshSides from "../accessoires/MeshSides.tsx";
 
 // STORES
 import Details from "./Details.tsx";
-import { BrightnessContrast, EffectComposer, N8AO, ToneMapping } from "@react-three/postprocessing";
-import { ToneMappingMode } from "postprocessing";
 import Canopy from "../accessoires/Canopy.tsx";
 import LoadingRamps from "../accessoires/LoadingRamps.tsx";
 // import useButtonState from "../stores/useButtonState.tsx";
 // import { shallow } from "zustand/shallow";
-import { Environment, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 import { baseUrl } from "../../global.ts";
 import * as THREE from "three";
-import useButtonState from "../stores/useButtonState.tsx";
-import { shallow } from "zustand/shallow";
 import Nose from "./Nose.tsx";
 
 export default function MainTrailer() {
-	
-	const {darkMode} = useButtonState(
-		(state) => ({
-			darkMode: state.darkMode,
-		}),
-		shallow
-	);
 
 	// GRASS TEXTURE
 	const grassTexture = useTexture({
@@ -47,23 +36,13 @@ export default function MainTrailer() {
 
 	return (
 		<>
-			<EffectComposer multisampling={8}>
-				<N8AO halfRes={false} aoRadius={18} distanceFalloff={0.2} intensity={4} screenSpaceRadius renderMode={0} />
-				<ToneMapping mode={ToneMappingMode.NEUTRAL} />
-				<BrightnessContrast contrast={0.12} brightness={-0.02} />
-			</EffectComposer>
-
-			<Environment
-				files={`${baseUrl}/img/environment2.jpg`}
-				environmentIntensity={ darkMode ? 1.5 : 3.5}
-			/>
 
 			{/* <Environment preset="city" /> */}
 
 			{/* TRAILER BASIC */}
 			<Chassis />
-			<TrailerNose />
 			<Nose />
+			<TrailerNose/>
 			<Wheels />
 			<Spatboard />
 			<TrailerBed />

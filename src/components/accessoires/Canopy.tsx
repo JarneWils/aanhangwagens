@@ -70,8 +70,6 @@ export default function Canopy() {
 		return geo;
 	}, []);
 
-	const robeGeometry =  new THREE.CylinderGeometry(0.008, 0.004, plankHeight + 0.1);
-
 
 	/**
 	 * MATERIALS
@@ -92,6 +90,16 @@ export default function Canopy() {
 			color: "#777777",
 			roughness: 0.4,
 			metalness: 0.2,
+			side: THREE.DoubleSide,
+		});
+		return mat;
+	}, []);
+
+	const ringMaterial = useMemo(() => {
+		const mat = new THREE.MeshStandardMaterial({
+			color: "#bbbbbb",
+			roughness: 0,
+			metalness: 0.7,
 			side: THREE.DoubleSide,
 		});
 		return mat;
@@ -134,15 +142,20 @@ export default function Canopy() {
 
 	const groupCount = Math.floor(frameLength / 0.55);
 	const groupSpacing = 0.5;
-		
+
+	const dx = 0.25;
+	const dy = plankHeight;
+	
+	const angle = Math.atan2(dx, dy); 
+	
+	const robeGeometry =  new THREE.CylinderGeometry(0.008, 0.004, 1);
 
 	const canopyGeometry = useMemo(() => {
-		// Hier gebruiken we geen BoxGeometry meer, maar RoundedBox
 		return (
 			<group visible={canopy ? true : false}>
 				<RoundedBox
-					args={[frameLength +0.1, 1, frameWidth + 0.125]} // Afmetingen
-					radius={0.02} // Straal van de afgeronde hoeken
+					args={[frameLength +0.1, 1, frameWidth + 0.125]}
+					radius={0.02}
 					position={[0, 0.5 + plankHeight, 0]}
 					receiveShadow
 					castShadow
@@ -310,48 +323,73 @@ export default function Canopy() {
 						<mesh
 						name="ring"
 						geometry={ringGeometry}
-						material={zipperBarMaterial}
+						material={ringMaterial}
 						position={[0, plankHeight + 0.05, frameWidth / 2 + 0.08]}
 						/>
-						<mesh
-						name="robe"
-						geometry={robeGeometry}
-						material={robeMaterial}
-						position={[-plankHeight / 2.765, plankHeight / 1.65, frameWidth / 2 + 0.055]}
-						rotation={[0, -Math.PI * 0.05, -Math.PI * 0.2]}
-						/>
-						<mesh
-						name="robe"
-						geometry={robeGeometry}
-						material={robeMaterial}
-						position={[plankHeight / 2.765, plankHeight / 1.65, frameWidth / 2 + 0.055]}
-						rotation={[0, Math.PI * 0.05, Math.PI * 0.2]}
-						/>
+						<group rotation={[0, 0, 0]} visible={plankHeight > 0.2 ? true : false}>
+							<mesh
+							name="robe"
+							geometry={robeGeometry}
+							material={robeMaterial}
+							position={[-0.125, plankHeight / 2 + 0.05, frameWidth / 2 + 0.065]}
+							rotation={[plankHeight / 4, 0, -angle]}
+							scale={[1, Math.sqrt(plankHeight * plankHeight + dx * dx), 1]}
+							/>
+							<mesh
+							name="robe"
+							geometry={robeGeometry}
+							material={robeMaterial}
+							position={[0.125, plankHeight / 2 + 0.05, frameWidth / 2 + 0.065]}
+							rotation={[plankHeight / 4, 0, angle]}
+							scale={[1, Math.sqrt(plankHeight * plankHeight + dx * dx), 1]}
+							/>
+							<mesh
+							name="stop"
+							geometry={robeGeometry}
+							material={robeMaterial}
+							position={[-0.25, 0.055, frameWidth / 2 + 0.05]}
+							rotation={[Math.PI * 0.5, 0, 0]}
+							scale={[1.8, 0.03, 1.8]}
+							/>
+						</group>
 					</group>
 				))}
+
 				{Array.from({ length: groupCount }).map((_, i) => (
 					<group key={i} position={[i * groupSpacing - frameLength / 2 + 0.45, 0.01, 0.01]}>
+					<mesh
+					name="ring"
+					geometry={ringGeometry}
+					material={ringMaterial}
+					position={[0, plankHeight + 0.05, - (frameWidth / 2 + 0.08)]}
+					/>
+					<group rotation={[0, 0, 0]} visible={plankHeight > 0.2 ? true : false}>
 						<mesh
-						name="ring"
-						geometry={ringGeometry}
-						material={zipperBarMaterial}
-						position={[0, plankHeight + 0.05, -(frameWidth / 2 + 0.08)]}
+						name="robe"
+						geometry={robeGeometry}
+						material={robeMaterial}
+						position={[-0.125, plankHeight / 2 + 0.05, - (frameWidth / 2 + 0.065)]}
+						rotation={[- plankHeight / 4, 0, -angle]}
+						scale={[1, Math.sqrt(plankHeight * plankHeight + dx * dx), 1]}
 						/>
 						<mesh
 						name="robe"
 						geometry={robeGeometry}
 						material={robeMaterial}
-						position={[-plankHeight / 2.765, plankHeight / 1.65, -(frameWidth / 2 + 0.055)]}
-						rotation={[0, Math.PI * 0.05, -Math.PI * 0.2]}
+						position={[0.125, plankHeight / 2 + 0.05, - (frameWidth / 2 + 0.065)]}
+						rotation={[- plankHeight / 4, 0, angle]}
+						scale={[1, Math.sqrt(plankHeight * plankHeight + dx * dx), 1]}
 						/>
 						<mesh
-						name="robe"
+						name="stop"
 						geometry={robeGeometry}
 						material={robeMaterial}
-						position={[plankHeight / 2.765, plankHeight / 1.65, -(frameWidth / 2 + 0.055)]}
-						rotation={[0, -Math.PI * 0.05, Math.PI * 0.2]}
+						position={[-0.25, 0.055, - (frameWidth / 2 + 0.05)]}
+						rotation={[Math.PI * 0.5, 0, 0]}
+						scale={[2, 0.02, 2]}
 						/>
 					</group>
+				</group>
 				))}
 			</group>
 		);

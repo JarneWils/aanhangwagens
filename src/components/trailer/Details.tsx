@@ -6,6 +6,9 @@ import { useGLTF, useTexture } from "@react-three/drei"
 import { baseUrl } from "../../global"
 import { shallow } from "zustand/shallow"
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js"
+import { useSpecialGeometry } from "../hooks/useSpecialGeometry"
+import useButtonState from "../stores/useButtonState"
+import useNormalBasedCubeUVs from "../hooks/useNormalBasedCubeUvs"
 
 
 export default function Details ()
@@ -18,6 +21,13 @@ export default function Details ()
             frameWidth: state.frameWidth,
             plankHeight: state.plankHeight
         }}, shallow
+    )
+    const {gateOpen} = useButtonState(
+        (state) => {
+            return {
+                gateOpen: state.gateOpen
+            }
+        }, shallow
     )
 
     /**
@@ -47,6 +57,21 @@ export default function Details ()
         texture.wrapT = THREE.RepeatWrapping
         texture.repeat.set(1, 1)
     })
+
+    const metalTexture = useTexture({
+		map: `${baseUrl}/textures/metal2.0/concrete_floor_02_diff_4k_2.0.jpg`,
+		normalMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_nor_gl_4k.jpg`,
+		// roughnessMap: `${baseUrl}/textures/metal2.0/concrete_floor_02_rough_4k.jpg`,
+		// aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
+	});
+	Object.values(metalTexture).forEach((texture) => {
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(2, 2.5);
+	});
+
+	const stealMatcap = useTexture(`${baseUrl}/matcaps/steal6.4.png`);
+	stealMatcap.colorSpace = THREE.SRGBColorSpace;
       
 
     /**
@@ -57,9 +82,29 @@ export default function Details ()
             color: '#ababb5',
             roughness: 0.2,
             metalness: 0.9,
+            side: THREE.DoubleSide,
         })
         return mat
     }, [])
+
+    const metal2 = useMemo(() => {
+        const mat = new THREE.MeshStandardMaterial({
+            color: '#c5c0c5',
+            roughness: 0.3,
+            metalness: 0.8,
+            side: THREE.DoubleSide,
+        })
+        return mat
+    }, [])
+
+    const scharnierMaterial = useMemo(() => {
+		const mat = new THREE.MeshMatcapMaterial({
+			... metalTexture,
+			color: "#ffffff",
+			matcap: stealMatcap,
+		});
+		return mat;
+	}, [metalTexture, stealMatcap]);
 
     const backLightMaterial = useMemo(() => {
         const mat = new THREE.MeshStandardMaterial({
@@ -74,7 +119,7 @@ export default function Details ()
     const redBackLightMaterial = useMemo(() => {
         const mat = new THREE.MeshStandardMaterial({
             ...backLightTexture,
-            color: '#ee0000',
+            color: 'rgb(210, 49, 49)',
             roughness: 0.5,
             metalness: 0.4,
             transparent: true,
@@ -152,14 +197,42 @@ export default function Details ()
     },[])
 
     const roundedBox = useMemo(() => {
-        const geo = new RoundedBoxGeometry(3, 1.5, 0.07, 8, 16)
+        const geo = new RoundedBoxGeometry(3, 1.5, 0.07, 2, 1)
         return new THREE.Mesh(geo)
     },[])
+
+    // trailer gate
+    const curve = useMemo(() => {
+        // 3D punten voor de haak met 90 graden bocht
+        const points = [
+          new THREE.Vector3(0, 0, 0),
+          new THREE.Vector3(0, 0, 2),
+          new THREE.Vector3(2, 0, 2), // 90° hoek naar rechts
+        ];
+    
+        return new THREE.CatmullRomCurve3(points);
+    }, []);
+
+    const cylinder = new THREE.CylinderGeometry(0.01, 0.01, 0.04, 32,);
+	useNormalBasedCubeUVs(cylinder);
+
+    const scharnier = useSpecialGeometry(0.01, plankHeight, 0.03, 1, 0)
+
     /**
      * MODEL
      */
     const { nodes} = useGLTF(`${baseUrl}/models/backlights.glb`) as any
 
+    const scharnierModel = useGLTF(`${baseUrl}/models/scharnier.glb`) as any
+    //clone the model
+    const scharnierModelClone = scharnierModel.scene.clone()
+
+    scharnierModel.scene.traverse((child: any) => {
+		if (child.isMesh) {
+			child.material = metal2;
+			child.material.needsUpdate = true;
+		}
+	});
 
     /**
      * DISPOSE
@@ -168,8 +241,9 @@ export default function Details ()
         return () => {
             metal.dispose()
             tube.dispose()
+            scharnier.dispose()
         };
-    }, [metal, tube])
+    }, [metal, tube, scharnier])
 
 
     /**
@@ -199,7 +273,7 @@ export default function Details ()
     }
     if (frameLength > 5.3) {
         reflectorX = 5.2
-    } 
+    }
     
 
     return <>
@@ -231,7 +305,7 @@ export default function Details ()
         <group
         name="backlight-left"
         scale={0.06}
-        position={[frameLength / 2 - 0.025, -0.1, frameWidth / 2 - 0.15]}
+        position={[frameLength / 2 - 0.03, -0.1, frameWidth / 2 - 0.15]}
         rotation={[0, Math.PI / 2, 0]}>
             
             <mesh
@@ -268,7 +342,7 @@ export default function Details ()
         <group
         name="backlight-right"
         scale={0.06}
-        position={[frameLength / 2 - 0.025, -0.1, - (frameWidth / 2 - 0.15)]}
+        position={[frameLength / 2 - 0.03, -0.1, - (frameWidth / 2 - 0.15)]}
         rotation={[0, Math.PI / 2, 0]}>
             
             <mesh
@@ -394,5 +468,71 @@ export default function Details ()
                 rotation={[0, -Math.PI * 0.5, 0]}
             />
         </group>
+        <group
+        name="trailer-gate"
+        position={[0, 0, 0]}>
+            <mesh
+                name="haakje-left"
+                material={metal}
+                geometry={new THREE.TubeGeometry(curve, 20, 0.15, 8, false)}
+                scale={[0.025, 0.05, 0.025]}
+                rotation={[Math.PI, Math.PI * 0.5, 0]}
+                position={[frameLength/2 - 0.045, -0.01, frameWidth/2 - 0.354]}>
+            </mesh>
+            <mesh
+                name="haakje-right"
+                material={metal}
+                geometry={new THREE.TubeGeometry(curve, 20, 0.15, 8, false)}
+                scale={[0.025, 0.05, 0.025]}
+                rotation={[0, Math.PI * 0.5, 0]}
+                position={[frameLength/2 - 0.045, -0.01, -(frameWidth/2 - 0.354)]}>
+            </mesh>
+            <group visible={plankHeight < 0.2}>
+                <mesh
+                    name="scharnierplaat-left"
+                    material={scharnierMaterial}
+                    geometry={scharnier}
+                    position={[frameLength/2 + 0.005, !gateOpen ? plankHeight/2 -0.005 : -plankHeight/2 - 0.005, frameWidth/2 - 0.325]}>
+                </mesh>
+                <mesh
+                    name="scharnierplaat-right"
+                    material={scharnierMaterial}
+                    geometry={scharnier}
+                    position={[frameLength/2 + 0.005, !gateOpen ? plankHeight/2 -0.005 : -plankHeight/2 - 0.005, -(frameWidth/2 - 0.325)]}>
+                </mesh>
+            </group>
+            <group visible={plankHeight >= 0.2}>
+                <primitive
+                    object={scharnierModel.scene}
+                    position={[frameLength/2 + 0.006, -0.01, frameWidth/2 - 0.325]}
+                    rotation={[0, !gateOpen ? Math.PI * 0.5 : - Math.PI * 0.5, gateOpen ? Math.PI : 0]}
+                    scale={[0.15, 0.15, 0.15]}
+                />
+                <primitive
+                    object={scharnierModelClone}
+                    position={[frameLength/2 + 0.006, -0.01,  - (frameWidth/2 - 0.325)]}
+                    rotation={[0, !gateOpen ? Math.PI * 0.5 : - Math.PI * 0.5, gateOpen ? Math.PI : 0]}
+                    scale={[0.15, 0.15, 0.15]}
+                />
+            </group>
+
+            <mesh
+                name="cylinder-left"
+                material={scharnierMaterial}
+                geometry={cylinder}
+                rotation={[Math.PI / 2, 0, 0]}
+                position={[frameLength/2 + 0.006, -0.01, frameWidth/2 - 0.325]}>
+            </mesh>
+            <mesh
+                name="cylinder-right"
+                material={scharnierMaterial}
+                geometry={cylinder}
+                rotation={[Math.PI / 2, 0, 0]}
+                position={[frameLength/2 + 0.006, -0.01, -(frameWidth/2 - 0.325)]}>
+            </mesh>
+
+        </group>
     </>
 }
+
+useGLTF.preload(`${baseUrl}/models/scharnier.glb`)

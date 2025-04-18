@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import React, { useMemo, useEffect } from "react";
-import { useTexture } from "@react-three/drei";
+import { Instance, Instances, useTexture } from "@react-three/drei";
 import { shallow } from "zustand/shallow";
 import useMeasurements from "../stores/useMeasurements.tsx";
 import useButtonState from "../stores/useButtonState.tsx";
@@ -19,7 +19,12 @@ export default function Chassis() {
 		}),
 		shallow
 	);
-	const meshSideState = useButtonState((state) => state.meshSideState);
+	const {meshSideState, gateOpen} = useButtonState((state) => ({
+			meshSideState: state.meshSideState,
+			gateOpen: state.gateOpen,
+		}),
+		shallow
+	);
 
 	const aantalSteunLatten = Math.floor(frameLength * 2);
 	const startX = -frameLength / 2 + 0.5;
@@ -29,9 +34,9 @@ export default function Chassis() {
 	 */
 	const metalTexture = useTexture({
 		map: `${baseUrl}/textures/metal2.0/concrete_floor_02_diff_4k_2.0.jpg`,
-		normalMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_nor_gl_4k.jpg`,
-		roughnessMap: `${baseUrl}/textures/metal2.0/concrete_floor_02_rough_4k.jpg`,
-		aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
+		// normalMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_nor_gl_4k.jpg`,
+		// roughnessMap: `${baseUrl}/textures/metal2.0/concrete_floor_02_rough_4k.jpg`,
+		// aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
 	});
 	Object.values(metalTexture).forEach((texture) => {
 		texture.wrapS = THREE.RepeatWrapping;
@@ -46,10 +51,8 @@ export default function Chassis() {
 	 * MESHES
 	 */
 	const geometry = useSpecialGeometry(1, 1, 1, 1, 0.03);
-	const cylinder = useMemo(() => {
-		const geo = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
-		return geo;
-	}, []);
+	const cylinder = new THREE.CylinderGeometry(0.5, 1, frameLength / 2 + 0.5, 32);
+		
 
 	/**
 	 * SPECIAL GEOMETRIES -----------------------------------------------------------------------------------------------------------------------------------------
@@ -83,13 +86,15 @@ export default function Chassis() {
 	
 	const triangleMiddleLong = useSpecialGeometry(0.1, 0.02, 0.4, 1, 0.003);
 
+	const couplerBar = useSpecialGeometry(0.35,0.06,0.05,1,0.003);
+
 	/**
 	 * ------------------------------------------------------------------------------------------------------------------------------------------------------------
 	 * ------------------------------------------------------------------------------------------------------------------------------------------------------------
 	 */
 	const rubber = useMemo(() => {
 		const mat = new THREE.MeshStandardMaterial({
-			color: "#333333",
+			color: "#222222",
 			roughness: 0.4,
 			metalness: 0,
 		});
@@ -191,6 +196,7 @@ export default function Chassis() {
 				/>
 				<mesh
 					name="back"
+					castShadow
 					geometry={cornerBack}
 					material={materialUv}
 					position={[(frameLength - 0.05) / 2, (plankHeight + 0.15) / 2, -(frameWidth + 0.05) / 2]}
@@ -259,6 +265,7 @@ export default function Chassis() {
 				<mesh
 					name="back-side"
 					castShadow
+					receiveShadow
 					geometry={backBackBar}
 					material={materialUv}
 					position={[frameLength / 2 - 0.04, -0.05, 0]}
@@ -267,6 +274,7 @@ export default function Chassis() {
 				<mesh
 					name="top"
 					castShadow
+					receiveShadow
 					geometry={backTopBottom}
 					material={materialUv}
 					position={[frameLength / 2 - 0.013, 0.015, 0]}
@@ -276,6 +284,7 @@ export default function Chassis() {
 				<mesh
 					name="bottom"
 					castShadow
+					receiveShadow
 					geometry={backTopBottom}
 					material={materialUv}
 					position={[frameLength / 2 - 0.013, -0.12, 0]}
@@ -285,6 +294,7 @@ export default function Chassis() {
 				<mesh
 					name="left-side"
 					castShadow
+					receiveShadow
 					geometry={backSides}
 					material={materialUv}
 					position={[frameLength / 2 - 0.025, -0.05, frameWidth/2 + 0.045]}
@@ -292,9 +302,21 @@ export default function Chassis() {
 				<mesh
 					name="right-side"
 					castShadow
+					receiveShadow
 					geometry={backSides}
 					material={materialUv}
 					position={[frameLength / 2 - 0.025, -0.05, - (frameWidth/2 + 0.045)]}
+				/>
+				{/* gate top */}
+				<mesh
+					name="gate-top"
+					castShadow
+					receiveShadow
+					geometry={backTopBottom}
+					material={materialUv}
+					position={[ gateOpen ? frameLength / 2 + 0.02 : frameLength / 2 - 0.013, !gateOpen ? plankHeight + 0.03 : - plankHeight - 0.03, 0]}
+					rotation={[0, Math.PI / 2, 0]}
+					scale={[0.94, 2, 1]}
 				/>
 
 
@@ -347,7 +369,7 @@ export default function Chassis() {
 			</group>
 
 			{/* TRIANGLE BARS */}
-			<group scale={[1, 1, 1]} position={[0, -0.065, 0]}>
+			<group scale={[1, 1, 1]} position={[0.1, -0.065, 0]}>
 				<mesh
 					castShadow
 					receiveShadow
@@ -365,37 +387,30 @@ export default function Chassis() {
 					rotation-y={-Math.PI * 0.115}
 				/>
 				{/* MIDDLE */}
-				<mesh
-					castShadow
-					receiveShadow
-					geometry={triangleMiddle}
-					material={materialUv}
-					position={[-frameLength / 2 - 0.625, 0.025, 0]}
+				<Instances geometry={triangleMiddle} material={materialUv} castShadow>
+				<Instance position={[-frameLength / 2 - 0.625, 0.025, 0]} />
+				<Instance
+					scale={[0.2, 1, 1.7]}
+					rotation={[0, 0, 1.55]}
+					position={[-frameLength / 2 - 0.48, 0.031, 0]}
 				/>
-				<mesh
-					castShadow
-					receiveShadow
-					geometry={triangleMiddle}
-					material={materialUv}
-					scale={[0.2, 1, 2]}
-					position={[-frameLength / 2 - 0.48, -0.03, 0]}
-				/>
-				<mesh
-					castShadow
-					receiveShadow
-					geometry={triangleMiddleLong}
-					material={materialUv}
-					position={[-frameLength / 2 - 0.25, 0, 0]}
-				/>
-				<mesh
-					castShadow
-					receiveShadow
-					geometry={cylinder}
-					material={rubber}
-					rotation-z={Math.PI * 0.5}
-					scale={[0.01, 1, 0.01]}
-					position={[-frameLength / 2, -0.0445, -0.015]}
-				/>
+				</Instances>
+
+				<Instances geometry={triangleMiddleLong} material={materialUv} castShadow>
+					<Instance position={[-frameLength / 2 - 0.25, 0, 0]} />
+				</Instances>
+
+				<Instances geometry={cylinder} material={rubber} castShadow>
+					<Instance
+						rotation={[0, 0, Math.PI * 0.5]}
+						scale={[0.01, 1, 0.01]}
+						position={[-frameLength / 4 - 0.25, -0.0445, -0.015]}
+					/>
+				</Instances>
+
+				<Instances geometry={couplerBar} material={materialUv} castShadow>
+					<Instance position={[-frameLength / 2 - 0.64, 0.068, 0]} />
+				</Instances>
 			</group>
 		</>
 	);

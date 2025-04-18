@@ -137,26 +137,87 @@ export default function SelectButton({ name }: { name: string }) {
 		}
 	}
 
-	useEffect(() => {
-		// Haal de parameters uit de URL
-		const params = new URLSearchParams(window.location.search);
+	/**
+	 * Data uit de URL ophalen
+	 */
+	// useEffect(() => {
+	// 	const params = new URLSearchParams(window.location.search);
 	
-		const urlJockeyWheel = params.get('jockey_wheel') || '';
-		const urlMeshSides = params.get('mesh_sides') || '';
-		const urlSpareWheel = params.get('spare_wheel') || '';
-		const urlCanopy = params.get('canopy') || '';
-		const urlLoadingRamps = params.get('loading_ramps') || '';
+	// 	const urlJockeyWheel = params.get('jockey_wheel') || '';
+	// 	const urlMeshSides = params.get('mesh_sides') || '';
+	// 	const urlSpareWheel = params.get('spare_wheel') || '';
+	// 	const urlCanopy = params.get('canopy') || '';
+	// 	const urlLoadingRamps = params.get('loading_ramps') || '';
 
-		// Als de parameters aanwezig zijn in de URL, update ze in de store
-		if (urlJockeyWheel === '1') setJockeyWheel(true);
-		if (urlMeshSides === '1') setMeshSideState(true);
-		if (urlSpareWheel === '1') setSpareWheel(true);
-		if (urlCanopy === '1') setCanopy(true);
-		if (urlLoadingRamps === '1') {
-			setLoadingRamps(true)
-			setGateOpen(true)
+
+	/**
+	 * Data via key en id ophalen
+	 */
+	// Haal de configuratie data op via de id en key
+	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+		const postId = params.get('id');
+		const key = params.get('key');
+	
+		const setDefaultValues = () => {
+			setJockeyWheel(true);
+			setMeshSideState(false);
+			setSpareWheel(false);
+			setCanopy(false);
+			setLoadingRamps(false);
+			console.log("Default values set");
 		};
-	  	}, [setJockeyWheel, setMeshSideState, setSpareWheel, setCanopy, setLoadingRamps, setGateOpen]);
+	
+		if (!postId || !key) {
+			setDefaultValues();
+			return;
+		}
+	
+		// Fetch configuratie data via AJAX
+		function getConfigurationData(postId: string, key: string) {
+			const data = {
+				action: 'get_configuration',
+				id: postId,
+				key: key
+			};
+
+			fetch('http://localhost:3000/wp-admin/admin-ajax.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams(data),
+			})
+			.then((response) => response.json())
+			.then((response) => {
+				if (response.success) {
+					const configData = response.data;
+					// console.log('Success: data =', configData);
+	
+					setJockeyWheel(configData.jockey_wheel);
+					setMeshSideState(configData.mesh_sides);
+					setSpareWheel(configData.spare_wheel);
+					setCanopy(configData.canopy);
+					setLoadingRamps(configData.loading_ramps);
+
+				} else {
+					setDefaultValues();
+					console.log('Error:', response.data ? response.data.message : 'No message');
+				}
+			})
+			.catch((error) => {
+				setDefaultValues();
+				console.error('AJAX error:', error);
+			});
+		}
+	
+		getConfigurationData(postId, key);
+	}, [setJockeyWheel, setMeshSideState, setSpareWheel, setCanopy, setLoadingRamps]);
+
+	if(loadingRamps === true){
+		setGateOpen(true);
+	}
+	
 
 	return (
 		<button style={{ ...buttonStyle, padding: "7px" }} onClick={handleClick} className="selectButton">

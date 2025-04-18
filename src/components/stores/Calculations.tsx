@@ -294,6 +294,12 @@ export default function Calculations() {
 	 */
 	//------------------------------------------------------------------------------
 
+	const formatPrice = new Intl.NumberFormat("nl-BE", {
+		style: "currency",
+		currency: "EUR",
+		minimumFractionDigits: 2,
+	}).format(totalPriceRounded);
+
 	return (
 		<>
 			<div className="calculation-container">
@@ -310,7 +316,7 @@ export default function Calculations() {
 					<div className="weight" style={{ color: totalWeightRounded > 750 ? "rgb(255, 50, 50)" : "var(--color-dark-text)" }}>
 						<MdOutlineScale className="weight-icon" /> {totalWeightRounded} kg
 					</div>
-					<div className="price" > <IoPricetagsOutline className="price-icon"/> € {totalPriceRounded}</div>
+					<div className="price" > <IoPricetagsOutline className="price-icon"/> {formatPrice}</div>
 				</div>
 			</div>
 		</>

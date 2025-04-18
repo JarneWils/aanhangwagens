@@ -18,7 +18,7 @@ const useMaterialState = createWithEqualityFn<MaterialState>((set) => ({
 	plankMaterialWoodLight: false,
 	setPlankMaterialWoodLight: (newPlankMaterial: boolean) => set({ plankMaterialWoodLight: newPlankMaterial }),	
 
-	plankMaterialWoodDark: false,
+	plankMaterialWoodDark: true,
 	setPlankMaterialWoodDark: (newPlankMaterial: boolean) => set({ plankMaterialWoodDark: newPlankMaterial }),
 
 	plankMaterialMetal: false,

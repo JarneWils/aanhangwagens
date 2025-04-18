@@ -13,19 +13,27 @@ export default function Nose() {
 		}),
 		shallow
 	);
-	const coupler = useGLTF(`${baseUrl}/models/coupler.glb`) as any;
+	const coupler = useGLTF(`${baseUrl}/models/coupler2.0.glb`) as any;
+	
+	const couplerRubber = useGLTF(`${baseUrl}/models/coupler-rubber.glb`) as any;
 
 	const stealTexture = useTexture(`${baseUrl}/textures/metal2.0/NormalSteal.jpg`);
+	stealTexture.colorSpace = THREE.SRGBColorSpace;
 
 	// const metalMatcap = useTexture(`${baseUrl}/matcaps/steal6.png`);
 
 	const metal = new THREE.MeshStandardMaterial({
-		normalMap: stealTexture,
-		color: "#88888b",
+		// normalMap: stealTexture,
+		color: "#808088",
 		metalness: 0.8,
-		roughness: 0.4
+		roughness: 0.2
 	});
 
+	const rubber = new THREE.MeshStandardMaterial({
+		color: "#333333",
+		metalness: 0.7,
+		roughness: 0.5
+	});
 	// const metal = new THREE.MeshMatcapMaterial({
 	// 	// map: stealTexture,
 	// 	matcap: metalMatcap,
@@ -40,13 +48,21 @@ export default function Nose() {
 			child.material.needsUpdate = true;
 		}
 	});
+	couplerRubber.scene.traverse((child: any) => {
+		if (child.isMesh) {
+			child.material = rubber;
+			child.material.needsUpdate = true;
+		}
+	});
+
 
 	return (
 		<group
-		scale={[0.13, 0.15, 0.11]}
-		position={[-frameLength / 2 - 0.815, -0.102 + 0.015, 0]}
+		scale={[0.11, 0.15, 0.1]}
+		position={[-frameLength / 2 - 0.985, -0.027, 0]}
 		castShadow
 		>
+			<primitive object={couplerRubber.scene} castShadow/>
 			<primitive object={coupler.scene} castShadow/>
 		</group>
 	);

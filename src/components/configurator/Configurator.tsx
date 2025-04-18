@@ -1,4 +1,3 @@
-import "../../style.css";
 import useButtonState from "../stores/useButtonState";
 import { GoScreenFull } from "react-icons/go";
 import { PiCompassLight } from "react-icons/pi";
@@ -168,7 +167,6 @@ export default function Configurator() {
 								<MeasurementsConfig />
 								{/* CALCULATIONS */}
 								{innerWidth > 900 ? <CalculationConfig /> : null}
-
 							</div>
 
 							{/* STEP 2 */}

@@ -12,9 +12,17 @@ export default function CalculationConfig() {
 		}), shallow
 	);
 
-	const totalLength = (frameLength + 1.2).toFixed(2); // de laadbak + de neus
-	const totalWidth = (frameWidth + 0.5).toFixed(2); // de laadbak + de wielen die uitsteken
-	const totalHeight = (plankHeight + 0.72 + 1).toFixed(2); // de laadbak + de afstand van de grond tot de laadbak + de hoogte van het rekje vanvoor op de laadbak
+	const totalLength = ((frameLength + 1).toFixed(2)).replace('.', ',');
+	const totalWidth = ((frameWidth + 0.5).toFixed(2)).replace('.', ',');
+	const totalHeight = ((plankHeight + 0.72 + 1).toFixed(2)).replace('.', ',');
+
+	const formatPrice = new Intl.NumberFormat("nl-BE", {
+		style: "currency",
+		currency: "EUR",
+		minimumFractionDigits: 2,
+	}).format(totalPriceRounded);
+
+
 
 	return (
 		<>
@@ -24,30 +32,30 @@ export default function CalculationConfig() {
 					<div className="calculation-row">
 						<div>
 							<div className="calculations-container" style={{ marginBottom: "8px" }}>
-								<div className="calculation">Length: </div>
-								<div className="calculated-number"> {totalLength} m</div>
+								<div className="calculation" style={{ marginRight: "8px", fontWeight: "bold" }}>Length: </div>
+								<div className="calculated-number" style={{ fontWeight: "normal" }}> {totalLength} m</div>
 							</div>
 							<div className="calculations-container" style={{ marginBottom: "8px" }}>
-								<div className="calculation" style={{ marginRight: "8px" }}>Width: </div>
-								<div className="calculated-number"> {totalWidth} m</div>
+								<div className="calculation" style={{ marginRight: "18px", fontWeight: "bold" }}>Width: </div>
+								<div className="calculated-number" style={{ fontWeight: "normal" }}> {totalWidth} m</div>
 							</div>
 							<div className="calculations-container" style={{ marginBottom: "8px" }}>
-								<div className="calculation">Height:  </div>
-								<div className="calculated-number" style={{ marginLeft: "4px" }}>  {totalHeight} m</div>
+								<div className="calculation" style={{ marginRight: "8px", fontWeight: "bold" }}>Height:  </div>
+								<div className="calculated-number" style={{ marginLeft: "4px", fontWeight: "normal" }}>  {totalHeight} m</div>
 							</div>
 						</div>
 						<div style={{ marginLeft: "16px" }}>
 							<div className="calculations-container" style={{ marginBottom: "8px" }}>
-								<div className="calculation" style={{ marginRight: "6px" }}>Weight:</div>
-								<div className="calculated-number">{totalWeightRounded} kg</div>
+								<div className="calculation" style={{ marginRight: "6px", fontWeight: "bold" }}>Weight:</div>
+								<div className="calculated-number" style={{ fontWeight: "normal" }}>{totalWeightRounded} kg</div>
 							</div>
-							<div className="calculations-container" style={{ marginBottom: "8px" }}>
+							{/* <div className="calculations-container" style={{ marginBottom: "8px" }}>
 								<div className="calculation" style={{ marginRight: "6px" }}> ... </div>
 								<div className="calculated-number"></div>
-							</div>
+							</div> */}
 							<div className="calculations-container" style={{ marginBottom: "8px" }}>
-								<div className="calculation" style={{ marginRight: "16px"}}>Price:</div>
-								<div className="calculated-number">€{totalPriceRounded}</div>
+								<div className="calculation" style={{ marginRight: "20px" , fontWeight: "bold"}}>Price:</div>
+								<div className="calculated-number" style={{ fontWeight: "normal" }}>{formatPrice}</div>
 							</div>
 						</div>
 					</div>

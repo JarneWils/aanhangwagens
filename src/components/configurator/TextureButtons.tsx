@@ -38,20 +38,75 @@ export default function TextureButtons({ name }: { name: string }) {
 		textureImagePath = `${baseUrl}/img/metal.png`;
 	}
 
-	//data from url if no data is provided, set plankMaterialWoodLight to true
+	// //data from url if no data is provided, set plankMaterialWoodLight to true
+	// useEffect(() => {
+	// 	const params = new URLSearchParams(window.location.search);
+	// 	const urlWoodLight = params.get('wood_light') || '';
+	// 	const urlWoodDark = params.get('wood_dark') || '';
+	// 	const urlMetal = params.get('metal') || '';
+
+	// 	if (!window.location.search) {
+	// 		setPlankMaterialWoodDark(true);
+	// 	} else {
+	// 		if (urlWoodLight === '1'){setPlankMaterialWoodLight(true)} else if (urlWoodLight === '0') {setPlankMaterialWoodLight(false)} else {setPlankMaterialWoodLight(false)};
+	// 		if (urlWoodDark === '1'){setPlankMaterialWoodDark(true)} else if (urlWoodDark === '0') {setPlankMaterialWoodDark(false)} else {setPlankMaterialWoodDark(true)};
+	// 		if (urlMetal === '1'){setPlankMaterialMetal(true)} else if (urlMetal === '0') {setPlankMaterialMetal(false)} else {setPlankMaterialMetal(false)}; 
+	// 	}
+	// }, [setPlankMaterialWoodLight, setPlankMaterialWoodDark, setPlankMaterialMetal]);
+
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
-		const urlWoodLight = params.get('wood_light') || '';
-		const urlWoodDark = params.get('wood_dark') || '';
-		const urlMetal = params.get('metal') || '';
-
-		if (!window.location.search) {
+		const postId = params.get('id');
+		const key = params.get('key');
+	
+		const setDefaultValues = () => {
+			setPlankMaterialWoodLight(false);
 			setPlankMaterialWoodDark(true);
-		} else {
-			if (urlWoodLight === '1'){setPlankMaterialWoodLight(true)} else {setPlankMaterialWoodLight(false)};
-			if (urlWoodDark === '1'){setPlankMaterialWoodDark(true)} else {setPlankMaterialWoodDark(false)};
-			if (urlMetal === '1'){setPlankMaterialMetal(true)} else {setPlankMaterialMetal(false)};
+			setPlankMaterialMetal(false);
+			console.log("Default values set");
+		};
+	
+		if (!postId || !key) {
+			setDefaultValues();
+			return;
 		}
+	
+		// Fetch configuratie data via AJAX
+		function getConfigurationData(postId: string, key: string) {
+			const data = {
+				action: 'get_configuration',
+				id: postId,
+				key: key
+			};
+
+			fetch('http://localhost:3000/wp-admin/admin-ajax.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams(data),
+			})
+			.then((response) => response.json())
+			.then((response) => {
+				if (response.success) {
+					const configData = response.data;
+					// console.log('Success: data =', configData);
+	
+					setPlankMaterialWoodLight(configData.wood_light);
+					setPlankMaterialWoodDark(configData.wood_dark);
+					setPlankMaterialMetal(configData.metal);
+
+				} else {
+					console.log('Error:', response.data ? response.data.message : 'No message');
+				}
+			})
+			.catch((error) => {
+				setDefaultValues();
+				console.error('AJAX error:', error);
+			});
+		}
+	
+		getConfigurationData(postId, key);
 	}, [setPlankMaterialWoodLight, setPlankMaterialWoodDark, setPlankMaterialMetal]);
 	
 	const [lastClicked, setLastClicked] = useState <string | null> (null);

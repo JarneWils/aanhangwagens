@@ -12,14 +12,15 @@ import "../style.css";
 import { shallow } from "zustand/shallow";
 
 export default function Scene() {
-	const { gl, scene } = useThree();
+
+	const { scene } = useThree();
 
 	// de renderer en scene in de store zetten.
 	useEffect(() => {
-		if (!gl || !scene) return;
-		useThreeStore.getState().setRenderer(gl);
+		if (!scene) return;
 		useThreeStore.getState().setScene(scene);
-	}, [gl, scene]);
+	}, [scene]);
+	
 
 	const {fullScreen, darkMode, screenShot} = useButtonState(
 		(state) => ({
@@ -32,7 +33,7 @@ export default function Scene() {
 
 	return (
 		<>
-		{ /* screenShot === true ? <color attach="background" args={["#DCFBFF"]} /> : */ darkMode === false ? <color attach="background" args={["#f8f8f8"]} /> : <color attach="background" args={["#505050"]} />}
+		{ /* screenShot === true ? <color attach="background" args={["#DCFBFF"]} /> : */ darkMode === false ? <color attach="background" args={["#f4f7f7"]} /> : <color attach="background" args={["#505050"]} />}
 		{darkMode === true ? <fog attach="fog" args={["#505050", 16, 25]} /> : null}
 
 			<OrbitControls

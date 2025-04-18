@@ -34,8 +34,8 @@ export default function TrailerNose() {
 	const metalTexture2 = useTexture({
 		map: `${baseUrl}/textures/metal2.0/concrete_floor_02_diff_4k_2.0.jpg`,
 		normalMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_nor_gl_4k.jpg`,
-		roughnessMap: `${baseUrl}/textures/metal2.0/concrete_floor_02_rough_4k.jpg`,
-		aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
+		// roughnessMap: `${baseUrl}/textures/metal2.0/concrete_floor_02_rough_4k.jpg`,
+		// aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
 	});
 	Object.values(metalTexture2).forEach((texture) => {
 		texture.wrapS = THREE.RepeatWrapping;
@@ -56,8 +56,8 @@ export default function TrailerNose() {
 			roughnessMap: metalTexture.roughnessMap,
 			aoMap: metalTexture.aoMap,
 			color: "#99999f",
-			metalness: 0.78,
-			roughness: 0.4,
+			metalness: 0.8,
+			roughness: 0.3,
 		});
 		return mat;
 	}, [metalTexture]);
@@ -97,12 +97,13 @@ export default function TrailerNose() {
 		return state.jockeyWheel;
 	});
 
-	const cylinder = new THREE.CylinderGeometry(0.02, 0.02, 0.3, 32,);
+	const cylinder = new THREE.CylinderGeometry(0.018, 0.018, 0.28, 32,);
 	useNormalBasedCubeUVs(cylinder);
+	
 
 	return (
 		<>
-			<group rotation-y={-Math.PI * 0.5} position={[-frameLength / 2 - 0.6, 0.02, 0]} scale={1.15}>
+			<group rotation-y={-Math.PI * 0.5} position={[-frameLength / 2 - 0.5, 0.02, 0]} scale={1.15}>
 				<group rotation={[Math.PI / 2, 0, 0]} scale={0.361}>
 					{/* <group position={[0, -0.02, 0.178]}>
 						<mesh
@@ -124,13 +125,13 @@ export default function TrailerNose() {
 					</group> */}
 
 					{jockeyWheel ? (
-						<group name="Wieletje" position={[0.115, -0.15, 0.2]}>
+						<group name="Wieletje" position={[0.115, -0.21, 0.2]}>
 							<mesh castShadow receiveShadow geometry={nodes.kolecko_low.geometry} material={rubber} />
 							<mesh castShadow receiveShadow geometry={nodes.nozicka_low.geometry} material={metal} scale={[0.8, 0.8, 1.05]} position={[0, 0, -0.04]}/>
-							<mesh castShadow receiveShadow geometry={cylinder} material={materialUv} scale={3} rotation={[Math.PI / 2, 0, 0]} position={[0, 0.005, 0.04]}/>
+							<mesh castShadow receiveShadow geometry={cylinder} material={materialUv} scale={3} rotation={[Math.PI / 2, 0, 0]} position={[0, 0.005, 0.01]}/>
 						</group>
 					) : null}
-					<group position={[0, -0.6, 0.13]}>
+					<group position={[0, -0.66, 0.095]} scale={[1, 1, 1.2]}>
 						<mesh name="kabel" castShadow receiveShadow geometry={nodes.kabel_low.geometry} material={rubber} />
 						<mesh name="stekker" castShadow receiveShadow geometry={nodes.zasuvka_low.geometry} material={rubber} />
 					</group>
@@ -140,5 +141,5 @@ export default function TrailerNose() {
 	);
 }
 
-useGLTF.preload("./models/trekhaak.glb");
-useGLTF.preload("./models/coupler.glb");
+useGLTF.preload(`${baseUrl}/models/trekhaak.glb`);
+useGLTF.preload(`${baseUrl}/models/coupler.glb`);

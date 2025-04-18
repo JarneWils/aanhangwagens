@@ -2,6 +2,7 @@ import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { CameraControls } from "@react-three/drei";
 import { EffectComposer } from "three-stdlib";
 
+
 export type ThreeStore = {
 	renderer: WebGLRenderer | null;
 	composer: EffectComposer | null;

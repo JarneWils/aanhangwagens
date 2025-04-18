@@ -1,4 +1,4 @@
-import { useGLTF } from "@react-three/drei";
+import { Instance, Instances, useGLTF } from "@react-three/drei";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
@@ -39,9 +39,19 @@ export default function Wheels() {
 
 	const tireMaterial = useMemo(() => {
 		const mat = new THREE.MeshStandardMaterial({
-			color: '#ccccdc',
-			roughness: 0.1,
+			color: '#bbb5bb',
+			roughness: 0.3,
 			metalness: 0.9,
+			side: THREE.DoubleSide,
+		})
+		return mat
+	}, [])
+
+	const rimMaterial = useMemo(() => {
+		const mat = new THREE.MeshStandardMaterial({
+			color: '#555555',
+			roughness: 1,
+			metalness: 0.6,
 			side: THREE.DoubleSide,
 		})
 		return mat
@@ -55,11 +65,11 @@ export default function Wheels() {
 	}, [buis, schijf]);
 
 	// MODEL
-	const { nodes, materials } = useGLTF(`${baseUrl}/models/tire-v1.glb`) as any;
+	const { nodes, /* materials */ } = useGLTF(`${baseUrl}/models/tire-v1.glb`) as any;
 	const tireGeometry = useMemo(() => nodes.Circle002.geometry, [nodes]);
 	// const tireMaterial = useMemo(() => materials["Material.001"], [materials]);
 	const rimGeometry = useMemo(() => nodes.Cube002.geometry, [nodes]);
-	const rimMaterial = useMemo(() => materials["Material.002"], [materials]);
+	// const rimMaterial = useMemo(() => materials["Material.002"], [materials]);
 
 	return (
 		<>
@@ -70,24 +80,29 @@ export default function Wheels() {
 					scale={0.15}
 					position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.2, frameWidth / 2 + 0.15]}
 				>
-					<mesh
-						castShadow
-						receiveShadow
-						geometry={tireGeometry}
-						material={tireMaterial}
+					<Instances
+					castShadow
+					receiveShadow
+					geometry={tireGeometry}
+					material={tireMaterial}>
+						<Instance
 						position={[0.004, -0.024, 0.138]}
 						rotation={[0, -1.569, -1.574]}
 						scale={1.475}
-					/>
-					<mesh
-						castShadow
-						receiveShadow
-						geometry={rimGeometry}
-						material={rimMaterial}
-						position={[0.004, 0.012, -0.004]}
-						rotation={[0, -1.569, -0.003]}
-						scale={[0.09, 0.109, 0.042]}
-					/>
+						/>
+					</Instances>
+						
+					<Instances
+					castShadow
+					receiveShadow
+					geometry={rimGeometry}
+					material={rimMaterial}>
+						<Instance
+							position={[0.004, 0.012, -0.004]}
+							rotation={[0, -1.569, -0.003]}
+							scale={[0.09, 0.109, 0.042]}
+						/>
+					</Instances>
 				</group>
 
 				{/* Rechter wiel */}
@@ -97,24 +112,28 @@ export default function Wheels() {
 					position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.2, -(frameWidth / 2) - 0.15]}
 					rotation-y={Math.PI}
 				>
-					<mesh
+					<Instances
 						castShadow
 						receiveShadow
 						geometry={tireGeometry}
-						material={tireMaterial}
-						position={[0.004, -0.024, 0.138]}
-						rotation={[0, -1.569, -1.574]}
-						scale={1.475}
-					/>
-					<mesh
+						material={tireMaterial}>
+						<Instance
+							position={[0.004, -0.024, 0.138]}
+							rotation={[0, -1.569, -1.574]}
+							scale={1.475}
+						/>
+					</Instances>
+					<Instances
 						castShadow
 						receiveShadow
 						geometry={rimGeometry}
-						material={rimMaterial}
-						position={[0.004, 0.012, -0.004]}
-						rotation={[0, -1.569, -0.003]}
-						scale={[0.09, 0.109, 0.042]}
-					/>
+						material={rimMaterial}>
+						<Instance
+							position={[0.004, 0.012, -0.004]}
+							rotation={[0, -1.569, -0.003]}
+							scale={[0.09, 0.109, 0.042]}
+						/>
+					</Instances>
 				</group>
 
 				{/* AS LEFT*/}
@@ -368,4 +387,4 @@ export default function Wheels() {
 	);
 }
 
-useGLTF.preload("./models/tire.glb");
+useGLTF.preload(`${baseUrl}/models/tire.glb`);

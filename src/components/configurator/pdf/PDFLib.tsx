@@ -151,6 +151,14 @@ export default function PDFLib() {
 			minimumFractionDigits: 2,
 		}).format(totalPriceRounded);
 
+		const totalLength = ((frameLength + 1).toFixed(2)).replace('.', ',');
+		const totalWidth = ((frameWidth + 0.5).toFixed(2)).replace('.', ',');
+		const totalHeight = ((plankHeight + 0.72 + 1).toFixed(2)).replace('.', ',');
+		
+		const key = Math.floor(Math.random() * 1000000);
+
+		
+
 		/** HEADER
 		 * ------------------------------------------------------------------------------------------
 		 */
@@ -223,7 +231,7 @@ export default function PDFLib() {
 			font: font,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText("123456", {
+		page.drawText(`${key}`, {
 			x: cm(17),
 			y: height - cm(5.6),
 			size: 11,
@@ -272,21 +280,21 @@ export default function PDFLib() {
 			font: boldFont,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText(`lengte: ${(frameLength + 1.2).toFixed(2)}m`, {
+		page.drawText(`lengte: ${totalLength}m`, {
 			x: cm(10),
 			y: height - cm(10.3),
 			size: 10,
 			font: font,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText(`breedte: ${(frameWidth + 0.5).toFixed(2)}m`, {
+		page.drawText(`breedte: ${totalWidth}m`, {
 			x: cm(10),
 			y: height - cm(10.8),
 			size: 10,
 			font: font,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText(`hoogte: ${(plankHeight + 0.72 + 1).toFixed(2)}m`, {
+		page.drawText(`hoogte: ${totalHeight}m`, {
 			x: cm(10),
 			y: height - cm(11.3),
 			size: 10,
@@ -305,21 +313,21 @@ export default function PDFLib() {
 			font: boldFont,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText(`lengte: ${(frameLength).toFixed(2)}m`, {
+		page.drawText(`lengte: ${totalLength}m`, {
 			x: cm(13),
 			y: height - cm(10.3),
 			size: 10,
 			font: font,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText(`breedte: ${(frameWidth).toFixed(2)}m`, {
+		page.drawText(`breedte: ${totalWidth}m`, {
 			x: cm(13),
 			y: height - cm(10.8),
 			size: 10,
 			font: font,
 			color: rgb(0, 0, 0),
 		});
-		page.drawText(`hoogte: ${(plankHeight).toFixed(2)}m`, {
+		page.drawText(`hoogte: ${totalHeight}m`, {
 			x: cm(13),
 			y: height - cm(11.3),
 			size: 10,
@@ -456,11 +464,11 @@ export default function PDFLib() {
 		// weight
 		formData.append("weight", totalWeightRounded.toString());
 		// frameWidth
-		formData.append("width", frameWidth.toString());
+		formData.append("width", frameWidth.toFixed(2).toString());
 		// frameLength
-		formData.append("length", frameLength.toString());
+		formData.append("length", frameLength.toFixed(2).toString());
 		// plankHeight
-		formData.append("height", plankHeight.toString());
+		formData.append("height", plankHeight.toFixed(2).toString());
 		// screenshot
 		formData.append("screenshot", screenshot);
 		// pdf
@@ -485,6 +493,8 @@ export default function PDFLib() {
 		formData.append("email_adress", eMail);
 		// name
 		formData.append("name", `${firstName} ${lastName}`);
+		// key
+		formData.append("key", key.toString());
 
 		// send data to the database
 		fetch("http://localhost:3000/wp-admin/admin-ajax.php", {

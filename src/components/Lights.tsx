@@ -10,10 +10,10 @@ export default function Lights() {
 	);
 	return (
 		<>
-			<ambientLight color="#ffffff" intensity={darkMode ? 3 : 2} />
+			<ambientLight color="#ffffff" intensity={darkMode ? 4 : 2} />
 			<directionalLight color="#aaaaaa" position={[1, 0.4, -6]} intensity={darkMode ? 2 : 3}/>
 
-			<directionalLight color="#bcbcbc" position={[-1, 1, 6]} intensity={darkMode ? 2 : 3}/>
+			<directionalLight color="#bcbcbc" position={[-4, 2, 6]} intensity={darkMode ? 2 : 3}/>
 			<directionalLight
 				color="#E3D8D0"
 				castShadow
@@ -21,8 +21,9 @@ export default function Lights() {
 				shadow-mapSize-width={256}
 				shadow-mapSize-height={256}
 				position={[1, 8, 0]}
-				intensity={darkMode ? 2.5 : 1.5 }
+				intensity={darkMode ? 2 : 1.5 }
 			/>
+			
 		</>
 	);
 }

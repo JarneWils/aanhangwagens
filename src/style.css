@@ -4,9 +4,9 @@
 html,
 body,
 #root {
-	--color-background: #f8f8f8;
+	--color-background: #f4f7f7;
 	--color-button-background: #ffffff;
-	--color-slider-background: #dedede;
+	--color-slider-background: #dddddd;
 	--color-accent: #ff5102;
 	--color-accent-soft: #ffbe91;
 	--color-dark-text: #323232;
@@ -240,8 +240,8 @@ body,
 	margin-top: -8px;
 }
 .slider-value input {
-	border: 1.5pt solid var(--color-light-grey);
-	background-color: var(--color-white);
+	border: 2px solid var(--color-slider-background);
+	background-color: transparent;
 	border-radius: 5px;
 	width: 32px;
 	padding: 4px;
@@ -322,7 +322,7 @@ input[type="range"]::-webkit-slider-thumb {
 	padding-right: 8px;
 	margin-right: 8px;
 	border: none;
-	border-radius: 50px;
+	border-radius: 8px;
 	background-color: transparent;
 	color: var(--color-dark-text);
 	font-family: Arial, Helvetica, sans-serif;
@@ -413,7 +413,7 @@ input[type="range"]::-webkit-slider-thumb {
 	background-color: var(--color-accent);
 	color: var(--color-white);
 	border: 2px solid transparent;
-	border-radius: 50px;
+	border-radius: 8px;
 	font-size: 0.9em;
 	font-weight: 600;
 	cursor: pointer;
@@ -926,6 +926,10 @@ PDF ----------------------------------------------------------------------------
 	border-radius: 10px !important;
 	margin-bottom: 10px !important;
 	box-shadow: var(--shadow-big-box) !important;
+}
+.toast2{
+	background-color: var(--color-white) !important;
+	color: var(--color-dark-text) !important;
 }
 .toast-description {
 	font-size: 14px;

@@ -2,9 +2,10 @@ import useMeasurements from "../stores/useMeasurements";
 import Slider from "./Slider";
 import { shallow } from "zustand/shallow";
 import { RiResetLeftFill } from "react-icons/ri";
-// import useButtonState from "../stores/useButtonState";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
 export default function MeasurementsConfig() {
+
 	const { frameLength, setFrameLength, frameWidth, setFrameWidth, plankHeight, setPlankHeight } = useMeasurements(
 		(state) => ({
 			frameLength: state.frameLength,
@@ -16,36 +17,100 @@ export default function MeasurementsConfig() {
 		}),
 		shallow
 	);
-	// const { setJockeyWheel, setMeshSideState, setSpareWheel } = useButtonState((state) => ({
-	// 	setJockeyWheel: state.setJockeyWheel,
-	// 	setMeshSideState: state.setMeshSideState,
-	// 	setSpareWheel: state.setSpareWheel,
-	// }));
 
-	useEffect(() => {
-		// Haal de parameters uit de URL
+	const [dataFound, setDataFound] = useState(false);
 
-		const params = new URLSearchParams(window.location.search);
-	
-		const urlFrameLength = parseFloat(params.get('length') || '');
-		const urlFrameWidth = parseFloat(params.get('width') || '');
-		const urlPlankHeight = parseFloat(params.get('height') || '');
-	
-		// Als de parameters aanwezig zijn in de URL, update ze in de store
-		if (!isNaN(urlFrameLength)) {setFrameLength(urlFrameLength)} else if (isNaN(urlFrameLength)) {setFrameLength(2.3)};
-		if (!isNaN(urlFrameWidth)) {setFrameWidth(urlFrameWidth)} else if (isNaN(urlFrameWidth)) {setFrameWidth(1.5)};
-		if (!isNaN(urlPlankHeight)) {setPlankHeight(urlPlankHeight)} else if (isNaN(urlPlankHeight)) {setPlankHeight(0.3)};
-	}, [setFrameLength, setFrameWidth, setPlankHeight]);
-
-	  // reload page
-	  const handleReset = () => {
+	// reset page
+	const handleReset = () => {
 		window.location.reload();
 	};
 
+	// Haal de configuratie data op via de id en key
+	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+		const postId = params.get('id');
+		const key = params.get('key');
+	
+		const setDefaultValues = () => {
+			setFrameLength(2.3); // Default length
+			setFrameWidth(1.5); // Default width
+			setPlankHeight(0.3); // Default height
+			console.log("Default values set");
+			setDataFound(false);
+			setTimeout(() => {
+				setDataFound(true);
+			}, 2000);
+		};
+	
+		if (!postId || !key) {
+			setDefaultValues();
+			setDataFound(false);
+			setTimeout(() => {
+				setDataFound(true);
+			}, 4000);
+			return;
+		}
+	
+		// Fetch configuratie data via AJAX
+		function getConfigurationData(postId: string, key: string) {
+			const data = {
+				action: 'get_configuration',
+				id: postId,
+				key: key
+			};
+
+			fetch('http://localhost:3000/wp-admin/admin-ajax.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams(data),
+			})
+			.then((response) => response.json())
+			.then((response) => {
+				if (response.success) {
+					const configData = response.data;
+					// console.log('Success: data =', configData);
+	
+					if (configData.length && configData.width && configData.height) {
+						setFrameLength(parseFloat(configData.length));
+						setFrameWidth(parseFloat(configData.width));
+						setPlankHeight(parseFloat(configData.height));
+						setDataFound(true);
+					} else {
+						setDefaultValues();
+						setDataFound(false);
+						setTimeout(() => {
+							setDataFound(true);
+						}, 4000);
+					}
+				} else {
+					setDefaultValues();
+					setDataFound(false);
+					setTimeout(() => {
+						setDataFound(true);
+					}, 4000);
+				}
+			})
+			.catch((error) => {
+				setDefaultValues();
+				setDataFound(false);
+				setTimeout(() => {
+					setDataFound(true);
+				}, 4000);
+				console.error('AJAX error:', error);
+			});
+		}
+	
+		getConfigurationData(postId, key);
+	}, [setFrameLength, setFrameWidth, setPlankHeight]);
+
+
 	return (
 		<>
-			<div className="section-container">
-				<h3>
+			{dataFound ? (
+				<div className="section-container">
+					<h3>
 					Trailerbed size{" "}
 					<button className="reset-btn" onClick={handleReset}>
 						<RiResetLeftFill />
@@ -53,17 +118,21 @@ export default function MeasurementsConfig() {
 				</h3>
 				<div className="measurement">
 					<div className="slider-title">Length</div>
-					<Slider value={frameLength != 0 ? frameLength : 2.3} min={1} max={5} onChange={setFrameLength} />
+					<Slider value={frameLength} min={1} max={5} onChange={setFrameLength} />
 				</div>
 				<div className="measurement">
 					<div className="slider-title">Width</div>
-					<Slider value={frameWidth != 0 ? frameWidth : 1.5} min={1} max={2.2} onChange={setFrameWidth} />
+					<Slider value={frameWidth} min={1} max={2.2} onChange={setFrameWidth} />
 				</div>
 				<div className="measurement">
 					<div className="slider-title">Height</div>
-					<Slider value={plankHeight != 0 ? plankHeight : 0.3} min={0.001} max={0.45} onChange={setPlankHeight} />
+					<Slider value={plankHeight} min={0.001} max={0.5} onChange={setPlankHeight} />
 				</div>
-			</div>
+			</div>) : (
+				<div className="section-container">
+					<div style={{textAlign: "center", fontSize: "0.9em", fontWeight: "normal", marginTop: "24px"}}>Loading data ...</div>
+				</div>
+			)}
 		</>
 	);
 }
