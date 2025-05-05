@@ -56,8 +56,8 @@ export default function TrailerNose() {
 			roughnessMap: metalTexture.roughnessMap,
 			aoMap: metalTexture.aoMap,
 			color: "#99999f",
-			metalness: 0.8,
-			roughness: 0.3,
+			metalness: 0.9,
+			roughness: 0.5,
 		});
 		return mat;
 	}, [metalTexture]);

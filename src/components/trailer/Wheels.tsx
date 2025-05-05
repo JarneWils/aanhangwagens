@@ -1,4 +1,4 @@
-import { Instance, Instances, useGLTF } from "@react-three/drei";
+import { /*Instance, Instances,*/ useGLTF, useTexture } from "@react-three/drei";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
@@ -34,14 +34,26 @@ export default function Wheels() {
 	}, []);
 	const schijf = useMemo(() => {
 		const geo = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
-		return geo;
+		return geo;.2
 	}, []);
 
+	const metalMatcap = useTexture(`${baseUrl}/matcaps/steal3.6.png`);
+
+
+	// const tireMaterial = useMemo(() => {
+	// 	const mat = new THREE.MeshMatcapMaterial({
+	// 		color: '#faf6ff',
+	// 		matcap: metalMatcap,
+	// 		side: THREE.DoubleSide,
+	// 	})
+	// 	return mat
+	// }, [])
 	const tireMaterial = useMemo(() => {
 		const mat = new THREE.MeshStandardMaterial({
-			color: '#bbb5bb',
+			color: '#aaaaaf',
+			metalness: 0.7,
 			roughness: 0.3,
-			metalness: 0.9,
+			map: metalMatcap,
 			side: THREE.DoubleSide,
 		})
 		return mat
@@ -49,9 +61,48 @@ export default function Wheels() {
 
 	const rimMaterial = useMemo(() => {
 		const mat = new THREE.MeshStandardMaterial({
-			color: '#555555',
+			color: '#3a3a3a',
 			roughness: 1,
+			metalness: 0,
+			side: THREE.DoubleSide,
+		})
+		return mat
+	}, [])
+
+	
+	const iron2 = useMemo(() => {
+		const mat = new THREE.MeshMatcapMaterial({
+			color: 'rgb(230, 234, 236)',
+			matcap: metalMatcap,
+			side: THREE.DoubleSide,
+		})
+		return mat
+	}, [])
+	const iron = useMemo(() => {
+		const mat = new THREE.MeshStandardMaterial({
+			color: 'rgb(255, 255, 255)',
 			metalness: 0.6,
+			roughness: 0.3,
+			map: metalMatcap,
+			side: THREE.DoubleSide,
+		})
+		return mat
+	}, [])
+
+	const gold = useMemo(() => {
+		const mat = new THREE.MeshMatcapMaterial({
+			color: 'rgb(242, 242, 242)',
+			matcap: metalMatcap,
+			side: THREE.DoubleSide,
+		})
+		return mat
+	}, [])
+
+	const rubber = useMemo(() => {
+		const mat = new THREE.MeshStandardMaterial({
+			color: '#3a3a3a',
+			roughness: 1,
+			metalness: 0,
 			side: THREE.DoubleSide,
 		})
 		return mat
@@ -61,8 +112,11 @@ export default function Wheels() {
 		return () => {
 			buis.dispose();
 			schijf.dispose();
+			iron.dispose();
+			gold.dispose();
+			rubber.dispose();
 		};
-	}, [buis, schijf]);
+	}, [buis, schijf, iron, gold, rubber]);
 
 	// MODEL
 	const { nodes, /* materials */ } = useGLTF(`${baseUrl}/models/tire-v1.glb`) as any;
@@ -71,11 +125,17 @@ export default function Wheels() {
 	const rimGeometry = useMemo(() => nodes.Cube002.geometry, [nodes]);
 	// const rimMaterial = useMemo(() => materials["Material.002"], [materials]);
 
+	const {nodes: nodes2} = useGLTF(`${baseUrl}/models/wheel2.0.glb`) as any;
+
+
+
 	return (
 		<>
-			{/* Linker wiel */}
-			<group position-x={frameLength > 2.7 ? -0.35 : 0}>
-				<group
+			
+			<group position-x={frameLength > 2.7 ? -0.3 : 0}>
+
+				{/* Linker wiel */}
+				{/* <group
 					dispose={null}
 					scale={0.15}
 					position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.2, frameWidth / 2 + 0.15]}
@@ -103,37 +163,123 @@ export default function Wheels() {
 							scale={[0.09, 0.109, 0.042]}
 						/>
 					</Instances>
+				</group> */}
+
+				<group
+				dispose={null}
+				scale={0.475}
+				position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.21, frameWidth / 2 + 0.15]}
+				rotation-y={Math.PI}>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes2.Circle.geometry}
+						material={rubber}
+						position={[0, -0.001, 0.018]}
+						rotation={[0, 1.569, -1.562]}
+						scale={[0.6, 0.5, 0.6]}
+					/>
+					<group scale={[1.1,1.1,1.05]}>
+						<mesh
+							castShadow
+							receiveShadow
+							geometry={nodes2.Circle002.geometry}
+							material={iron2}
+							position={[0.002, -0.002, 0.005]}
+							rotation={[0, 1.569, -1.562]}
+							scale={[0.308, 0.322, 0.308]}
+						/>
+						<mesh
+							castShadow
+							receiveShadow
+							geometry={nodes2.Circle003.geometry}
+							material={gold}
+							position={[0.006, 0, -0.156]}
+							rotation={[1.567, 1.112, -3.138]}
+							scale={[0.026, 0.016, 0.026]}
+						/>
+					</group>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes2.Circle004.geometry}
+						material={gold}
+						position={[-0.1, 0, 0.176]}
+						rotation={[-1.574, -1.112, -0.004]}
+						scale={-0.015}
+					/>
 				</group>
 
 				{/* Rechter wiel */}
-				<group
+				{/* <group
 					dispose={null}
 					scale={0.15}
 					position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.2, -(frameWidth / 2) - 0.15]}
 					rotation-y={Math.PI}
 				>
-					<Instances
+					<mesh
 						castShadow
 						receiveShadow
 						geometry={tireGeometry}
-						material={tireMaterial}>
-						<Instance
-							position={[0.004, -0.024, 0.138]}
-							rotation={[0, -1.569, -1.574]}
-							scale={1.475}
+						material={tireMaterial}
+						position={[0.004, -0.024, 0.138]}
+						rotation={[0, -1.569, -1.574]}
+						scale={1.475}
 						/>
-					</Instances>
-					<Instances
+					<mesh
 						castShadow
 						receiveShadow
 						geometry={rimGeometry}
-						material={rimMaterial}>
-						<Instance
-							position={[0.004, 0.012, -0.004]}
-							rotation={[0, -1.569, -0.003]}
-							scale={[0.09, 0.109, 0.042]}
+						material={rimMaterial}
+						position={[0.004, 0.012, -0.004]}
+						rotation={[0, -1.569, -0.003]}
+						scale={[0.09, 0.109, 0.042]}
+					/>
+				</group> */}
+
+				<group
+				dispose={null}
+				scale={0.475}
+				position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.21, -(frameWidth / 2) - 0.15]}
+				rotation-y={0}>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes2.Circle.geometry}
+						material={rubber}
+						position={[0, -0.001, 0.018]}
+						rotation={[0, 1.569, -1.562]}
+						scale={[0.6, 0.5, 0.6]}
+					/>
+					<group scale={[1.1,1.1,1.05]}>
+						<mesh
+							castShadow
+							receiveShadow
+							geometry={nodes2.Circle002.geometry}
+							material={iron2}
+							position={[0.002, -0.002, 0.005]}
+							rotation={[0, 1.569, -1.562]}
+							scale={[0.308, 0.322, 0.308]}
 						/>
-					</Instances>
+						<mesh
+							castShadow
+							receiveShadow
+							geometry={nodes2.Circle003.geometry}
+							material={gold}
+							position={[0.006, 0, -0.156]}
+							rotation={[1.567, 1.112, -3.138]}
+							scale={[0.026, 0.016, 0.026]}
+						/>
+					</group>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes2.Circle004.geometry}
+						material={gold}
+						position={[-0.1, 0, 0.176]}
+						rotation={[-1.574, -1.112, -0.004]}
+						scale={-0.015}
+					/>
 				</group>
 
 				{/* AS LEFT*/}
@@ -216,35 +362,58 @@ export default function Wheels() {
 					/>
 				</group>
 			</group>
+
+
 			{frameLength > 2.7 ? (
 				<group position-x={0.35}>
+					{/* Linker wiel */}
 					<group
-						dispose={null}
-						scale={0.15}
-						position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.2, frameWidth / 2 + 0.15]}
-					>
+					dispose={null}
+					scale={0.47}
+					position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.2, (frameWidth / 2) + 0.15]}
+					rotation-y={Math.PI}>
 						<mesh
 							castShadow
 							receiveShadow
-							geometry={tireGeometry}
-							material={tireMaterial}
-							position={[0.004, -0.024, 0.138]}
-							rotation={[0, -1.569, -1.574]}
-							scale={1.475}
+							geometry={nodes2.Circle.geometry}
+							material={rubber}
+							position={[0, -0.001, 0.018]}
+							rotation={[0, 1.569, -1.562]}
+							scale={[0.6, 0.5, 0.6]}
 						/>
+						<group scale={[1.1,1.1,1.05]}>
+							<mesh
+								castShadow
+								receiveShadow
+								geometry={nodes2.Circle002.geometry}
+								material={iron2}
+								position={[0.002, -0.002, 0.005]}
+								rotation={[0, 1.569, -1.562]}
+								scale={[0.308, 0.322, 0.308]}
+							/>
+							<mesh
+								castShadow
+								receiveShadow
+								geometry={nodes2.Circle003.geometry}
+								material={gold}
+								position={[0.006, 0, -0.156]}
+								rotation={[1.567, 1.112, -3.138]}
+								scale={[0.026, 0.016, 0.026]}
+							/>
+						</group>
 						<mesh
 							castShadow
 							receiveShadow
-							geometry={rimGeometry}
-							material={rimMaterial}
-							position={[0.004, 0.012, -0.004]}
-							rotation={[0, -1.569, -0.003]}
-							scale={[0.09, 0.109, 0.042]}
+							geometry={nodes2.Circle004.geometry}
+							material={gold}
+							position={[-0.1, 0, 0.176]}
+							rotation={[-1.574, -1.112, -0.004]}
+							scale={-0.015}
 						/>
 					</group>
 
 					{/* Rechter wiel */}
-					<group
+					{/* <group
 						dispose={null}
 						scale={0.15}
 						position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.2, -(frameWidth / 2) - 0.15]}
@@ -267,6 +436,50 @@ export default function Wheels() {
 							position={[0.004, 0.012, -0.004]}
 							rotation={[0, -1.569, -0.003]}
 							scale={[0.09, 0.109, 0.042]}
+						/>
+					</group> */}
+					<group
+					dispose={null}
+					scale={0.47}
+					position={[frameLength / 2 - (frameLength / 100) * wheelPositionX, -0.2, - (frameWidth / 2 + 0.15) ]}
+					rotation-y={0}>
+						<mesh
+							castShadow
+							receiveShadow
+							geometry={nodes2.Circle.geometry}
+							material={rubber}
+							position={[0, -0.001, 0.018]}
+							rotation={[0, 1.569, -1.562]}
+							scale={[0.6, 0.5, 0.6]}
+						/>
+						<group scale={[1.1,1.1,1.05]}>
+							<mesh
+								castShadow
+								receiveShadow
+								geometry={nodes2.Circle002.geometry}
+								material={iron2}
+								position={[0.002, -0.002, 0.005]}
+								rotation={[0, 1.569, -1.562]}
+								scale={[0.308, 0.322, 0.308]}
+							/>
+							<mesh
+								castShadow
+								receiveShadow
+								geometry={nodes2.Circle003.geometry}
+								material={gold}
+								position={[0.006, 0, -0.156]}
+								rotation={[1.567, 1.112, -3.138]}
+								scale={[0.026, 0.016, 0.026]}
+							/>
+						</group>
+						<mesh
+							castShadow
+							receiveShadow
+							geometry={nodes2.Circle004.geometry}
+							material={gold}
+							position={[-0.1, 0, 0.176]}
+							rotation={[-1.574, -1.112, -0.004]}
+							scale={-0.015}
 						/>
 					</group>
 
@@ -388,3 +601,4 @@ export default function Wheels() {
 }
 
 useGLTF.preload(`${baseUrl}/models/tire.glb`);
+useGLTF.preload(`${baseUrl}/models/wheel2.0.glb`);

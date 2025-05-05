@@ -21,7 +21,7 @@ export default function Lights() {
 				shadow-mapSize-width={256}
 				shadow-mapSize-height={256}
 				position={[1, 8, 0]}
-				intensity={darkMode ? 2 : 1.5 }
+				intensity={darkMode ? 2 : 2 }
 			/>
 			
 		</>

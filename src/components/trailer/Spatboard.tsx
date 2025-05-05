@@ -78,6 +78,16 @@ export default function Spatboard() {
 		});
 		return mat;
 	}, [metalTexture, stealMatcap]);
+	const material2 = useMemo(() => {
+		const mat = new THREE.MeshStandardMaterial({
+			// ... metalTexture,
+			color: "#444444",
+			roughness: 0.8,
+			metalness: 0.4,
+			// matcap: stealMatcap,
+		});
+		return mat;
+	}, [metalTexture, stealMatcap]);
 
 	// dispose
 	useEffect(() => {
@@ -91,8 +101,8 @@ export default function Spatboard() {
 	}, [cylinderEnkelAs, ringEnkelAs, cylinderTweeAs, ringTweeAs, middenVlak]);
 
 	// load gltf model
-	const { nodes } = useGLTF(`${baseUrl}/models/spatbord3.glb`) as any;
-	const { nodes: nodes2 } = useGLTF(`${baseUrl}/models/spatbord4.glb`) as any;
+	const { nodes } = useGLTF(`${baseUrl}/models/spatbord4.glb`) as any;
+	const { nodes: nodes2 } = useGLTF(`${baseUrl}/models/spatbordDouble4.glb`) as any;
 
 	return (
 		<>
@@ -102,9 +112,9 @@ export default function Spatboard() {
 				castShadow
 				receiveShadow
 				rotation-y={-Math.PI * 0.5}
-				scale={[0.15, 0.32, 0.2753]}
-				position={[0, -0.22, frameWidth / 2 + 0.161]}>
-					<mesh
+				scale={[0.15, 0.3, 0.26]}
+				position={[0, -0.24, frameWidth / 2 + 0.161]}>
+					 <mesh
 						castShadow
 						receiveShadow
 						geometry={nodes.Cube.geometry}
@@ -120,6 +130,14 @@ export default function Spatboard() {
 						position={[0, 1.288, 0]}
 						rotation={[0, 0, -Math.PI]}
 						scale={[-0.745, -0.021, -1.989]}
+					/>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes.Cube002.geometry}
+						material={material2}
+						position={[-0.652, 0, 0]}
+						scale={[0.056, 0.646, 1]}
 					/>
 				</group>
 
@@ -128,8 +146,8 @@ export default function Spatboard() {
 				castShadow
 				receiveShadow
 				rotation-y={Math.PI * 0.5}
-				scale={[0.15, 0.32, 0.2753]}
-				position={[0, -0.22, - (frameWidth / 2 + 0.161)]}>
+				scale={[0.15, 0.3, 0.26]}
+				position={[0, -0.24, - (frameWidth / 2 + 0.161)]}>
 					<mesh
 						castShadow
 						receiveShadow
@@ -146,6 +164,14 @@ export default function Spatboard() {
 						position={[0, 1.288, 0]}
 						rotation={[0, 0, -Math.PI]}
 						scale={[-0.745, -0.021, -1.989]}
+					/>
+					<mesh
+						castShadow
+						receiveShadow
+						geometry={nodes.Cube002.geometry}
+						material={material2}
+						position={[-0.652, 0, 0]}
+						scale={[0.056, 0.646, 1]}
 					/>
 				</group>
 			</group>
@@ -157,8 +183,8 @@ export default function Spatboard() {
 				castShadow
 				receiveShadow
 				rotation-y={-Math.PI * 0.5}
-				scale={[0.15, 0.32, 0.308]}
-				position={[0, -0.22, frameWidth / 2 + 0.161]}>
+				scale={[0.15, 0.32, 0.265]}
+				position={[0.02, -0.27, frameWidth / 2 + 0.161]}>
 					<mesh
 						castShadow
 						receiveShadow
@@ -182,8 +208,8 @@ export default function Spatboard() {
 				castShadow
 				receiveShadow
 				rotation-y={Math.PI * 0.5}
-				scale={[0.15, 0.32, 0.308]}
-				position={[0, -0.22, - (frameWidth / 2 + 0.161)]}>
+				scale={[0.15, 0.32, 0.265]}
+				position={[0.02, -0.27, - (frameWidth / 2 + 0.161)]}>
 					<mesh
 						castShadow
 						receiveShadow

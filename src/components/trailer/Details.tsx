@@ -5,7 +5,7 @@ import React from "react"
 import { useGLTF, useTexture } from "@react-three/drei"
 import { baseUrl } from "../../global"
 import { shallow } from "zustand/shallow"
-import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js"
+// import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js"
 import { useSpecialGeometry } from "../hooks/useSpecialGeometry"
 import useButtonState from "../stores/useButtonState"
 import useNormalBasedCubeUVs from "../hooks/useNormalBasedCubeUvs"
@@ -58,11 +58,18 @@ export default function Details ()
         texture.repeat.set(1, 1)
     })
 
+    const reflectorTexture = useTexture({
+        map: `${baseUrl}/textures/Reflector/reflection3.jpg`,
+    })
+    Object.values(reflectorTexture).forEach((texture) => {
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(0.2, 3);
+	});
+
     const metalTexture = useTexture({
 		map: `${baseUrl}/textures/metal2.0/concrete_floor_02_diff_4k_2.0.jpg`,
 		normalMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_nor_gl_4k.jpg`,
-		// roughnessMap: `${baseUrl}/textures/metal2.0/concrete_floor_02_rough_4k.jpg`,
-		// aoMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_ao_4k.jpg`,
 	});
 	Object.values(metalTexture).forEach((texture) => {
 		texture.wrapS = THREE.RepeatWrapping;
@@ -70,8 +77,45 @@ export default function Details ()
 		texture.repeat.set(2, 2.5);
 	});
 
+    const reflectorTexture2 = useTexture({
+        map: `${baseUrl}/textures/Reflector/reflection4.jpg`,
+    })
+    Object.values(reflectorTexture2).forEach((texture) => {
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(1, 2);
+	});
+
+    const reflectorTexture3 = useTexture({
+        map: `${baseUrl}/textures/Reflector/reflection2.jpg`,
+    })
+    Object.values(reflectorTexture3).forEach((texture) => {
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(0.5, 0.5);
+	}); 
+
+    const scharnierTexture = useTexture({
+		map: `${baseUrl}/textures/metal/math-metal-col.jpg`,
+		normalMap: `${baseUrl}/textures/metal/concrete_floor_worn_001_nor_gl_4k.jpg`,
+	});
+	Object.values(scharnierTexture).forEach((texture) => {
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(2, 0.5);
+	});
+
 	const stealMatcap = useTexture(`${baseUrl}/matcaps/steal6.4.png`);
 	stealMatcap.colorSpace = THREE.SRGBColorSpace;
+
+    const reflectorMatcap = useTexture(`${baseUrl}/matcaps/reflection6.png`);
+	reflectorMatcap.colorSpace = THREE.SRGBColorSpace;
+
+    const reflectorMatcapSoft = useTexture(`${baseUrl}/matcaps/reflection5.png`);
+	reflectorMatcapSoft.colorSpace = THREE.SRGBColorSpace;
+
+    const reflectorMatcapLight = useTexture(`${baseUrl}/matcaps/steal6.5.png`);
+	reflectorMatcapLight.colorSpace = THREE.SRGBColorSpace;
       
 
     /**
@@ -86,17 +130,16 @@ export default function Details ()
         })
         return mat
     }, [])
-
     const metal2 = useMemo(() => {
         const mat = new THREE.MeshStandardMaterial({
-            color: '#c5c0c5',
+            ... scharnierTexture,
+            color: 'rgb(189, 192, 203)',
             roughness: 0.3,
-            metalness: 0.8,
+            metalness: 0.6,
             side: THREE.DoubleSide,
         })
         return mat
     }, [])
-
     const scharnierMaterial = useMemo(() => {
 		const mat = new THREE.MeshMatcapMaterial({
 			... metalTexture,
@@ -106,82 +149,89 @@ export default function Details ()
 		return mat;
 	}, [metalTexture, stealMatcap]);
 
+
     const backLightMaterial = useMemo(() => {
         const mat = new THREE.MeshStandardMaterial({
             ...backLightTexture,
             color: '#333333',
-            roughness: 0.5,
-            metalness: 0,
+            roughness: 0.6,
+            metalness: 0.2,
         })
         return mat
     }, [])
 
-    const redBackLightMaterial = useMemo(() => {
-        const mat = new THREE.MeshStandardMaterial({
-            ...backLightTexture,
-            color: 'rgb(210, 49, 49)',
-            roughness: 0.5,
-            metalness: 0.4,
-            transparent: true,
-            opacity: 0.9,
-        })
-        return mat
-    }, [])
     const redBackLightMaterial2 = useMemo(() => {
-        const mat = new THREE.MeshStandardMaterial({
-            ...backLightTexture2,
-            color: '#ee0000',
-            roughness: 0.5,
-            metalness: 0.4,
-            transparent: true,
-            opacity: 0.9,
+        const mat = new THREE.MeshMatcapMaterial({
+            ...reflectorTexture3,
+            color: 'rgb(255, 8, 8)',
+            matcap: reflectorMatcapSoft,
         })
         return mat
     }, [])
-    const orangeBackLightMaterial = useMemo(() => {
-        const mat = new THREE.MeshStandardMaterial({
-            ...backLightTexture,
-            color: '#ffa500',
-            roughness: 0.5,
-            metalness: 0.4,
-            transparent: true,
-            opacity: 0.9,
+    const redBackLightMaterial3 = useMemo(() => {
+        const mat = new THREE.MeshMatcapMaterial({
+            ...reflectorTexture2,
+            color: 'rgb(255, 8, 8)',
+            matcap: reflectorMatcapSoft,
         })
         return mat
     }, [])
-    const orangeBackLightMaterial2 = useMemo(() => {
-        const mat = new THREE.MeshStandardMaterial({
-            ...backLightTexture2,
-            color: '#ffa500',
-            roughness: 0.4,
-            metalness: 0.5,
-            transparent: true,
-            opacity: 0.9,
+    const redBackLightMaterial4 = useMemo(() => {
+        const mat = new THREE.MeshMatcapMaterial({
+            ...reflectorTexture2,
+            color: 'rgb(255, 115, 115)',
+            matcap: reflectorMatcapLight,
         })
         return mat
     }, [])
-    const whiteBackLightMaterial = useMemo(() => {
-        const mat = new THREE.MeshStandardMaterial({
-            ...backLightTexture,
-            color: '#ffffff',
-            roughness: 0.4,
-            metalness: 0.2,
-            transparent: true,
-            opacity: 0.5,
+
+
+    const orangeBackLightMaterial3 = useMemo(() => {
+        const mat = new THREE.MeshMatcapMaterial({
+            ...reflectorTexture,
+            color: 'rgb(255, 175, 95)',
+            matcap: reflectorMatcap,
         })
         return mat
     }, [])
+    const orangeBackLightMaterial4 = useMemo(() => {
+        const mat = new THREE.MeshMatcapMaterial({
+            ...reflectorTexture2,
+            color: 'rgb(255, 175, 95)',
+            matcap: reflectorMatcapLight,
+        })
+        return mat
+    }, [])
+
+
     const whiteBackLightMaterial2 = useMemo(() => {
-        const mat = new THREE.MeshStandardMaterial({
-            ...backLightTexture2,
+        const mat = new THREE.MeshMatcapMaterial({
+            ...reflectorTexture3,
             color: '#ffffff',
-            roughness: 0.4,
-            metalness: 0.2,
-            transparent: true,
-            opacity: 0.4,
+            matcap: reflectorMatcap,
         })
         return mat
     }, [])
+    const whiteBackLightMaterial3 = useMemo(() => {
+        const mat = new THREE.MeshMatcapMaterial({
+            ...reflectorTexture2,
+            color: 'rgb(255, 255, 255)',
+            matcap: reflectorMatcapLight,
+        })
+        return mat
+    }, [])
+
+
+    const stealMatcap2 = useTexture(`${baseUrl}/matcaps/steal5.2.png`);
+	stealMatcap2.colorSpace = THREE.SRGBColorSpace;
+	const rubber = useMemo(() => {
+		const mat = new THREE.MeshMatcapMaterial({
+			// ... metalTexture,
+			color: "#ababab",
+			matcap: stealMatcap2,
+		});
+		return mat;
+	}, [metalTexture, stealMatcap]);
 
     /**
      * GEOMETRIES
@@ -196,10 +246,10 @@ export default function Details ()
         return new THREE.TubeGeometry(path, 4, 0.06, 6, false)
     },[])
 
-    const roundedBox = useMemo(() => {
-        const geo = new RoundedBoxGeometry(3, 1.5, 0.07, 2, 1)
-        return new THREE.Mesh(geo)
-    },[])
+    // const roundedBox = useMemo(() => {
+    //     const geo = new RoundedBoxGeometry(3, 1.5, 0.07, 2, 1)
+    //     return new THREE.Mesh(geo)
+    // },[])
 
     // trailer gate
     const curve = useMemo(() => {
@@ -216,12 +266,18 @@ export default function Details ()
     const cylinder = new THREE.CylinderGeometry(0.01, 0.01, 0.04, 32,);
 	useNormalBasedCubeUVs(cylinder);
 
+    const cylinderReflector = new THREE.CylinderGeometry(0.5, 0.5, 0.25, 32,);
+	useNormalBasedCubeUVs(cylinderReflector);
+
     const scharnier = useSpecialGeometry(0.01, plankHeight, 0.03, 1, 0)
 
     /**
      * MODEL
      */
-    const { nodes} = useGLTF(`${baseUrl}/models/backlights.glb`) as any
+
+    const {nodes: nodes3} = useGLTF(`${baseUrl}/models/backlights3.0.glb`) as any
+
+    const { nodes: nodes2} = useGLTF(`${baseUrl}/models/reflectorSide.glb`) as any
 
     const scharnierModel = useGLTF(`${baseUrl}/models/scharnier.glb`) as any
     //clone the model
@@ -302,85 +358,145 @@ export default function Details ()
             </React.Fragment>
             );
         })}
+        
         <group
-        name="backlight-left"
-        scale={0.06}
-        position={[frameLength / 2 - 0.03, -0.1, frameWidth / 2 - 0.15]}
-        rotation={[0, Math.PI / 2, 0]}>
-            
+        name="backlight_LEFT"
+        scale={0.05}
+        position={[frameLength / 2 - 0.034, -0.055, frameWidth / 2 - 0.15]}
+        rotation={[0, - Math.PI / 2, 0]}>         
             <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.Cube.geometry}
+                geometry={nodes3.BLACK.geometry}
                 material={backLightMaterial}
+                scale={[1.991, 1, 0.075]}
             />
             <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.Cube001.geometry}
-                material={redBackLightMaterial}
-                position={[0, 0, 1.037]}
-                rotation={[0, 0, -2.356]}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Cube002.geometry}
-                material={whiteBackLightMaterial}
-                position={[0.377, 0.467, 1.037]}
-                rotation={[0, 0, Math.PI]}
-            />
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Cube003.geometry}
-                material={orangeBackLightMaterial}
-                position={[-0.364, 0.467, 1.037]}
-                rotation={[0, 0, -Math.PI / 2]}
-            />
-        </group>
-        <group
-        name="backlight-right"
-        scale={0.06}
-        position={[frameLength / 2 - 0.03, -0.1, - (frameWidth / 2 - 0.15)]}
-        rotation={[0, Math.PI / 2, 0]}>
-            
-            <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Cube.geometry}
+                geometry={nodes3.Zilver.geometry}
                 material={backLightMaterial}
+                position={[1.348, 0.657, -0.247]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                scale={[0.078, 0.023, 0.078]}
             />
             <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.Cube001.geometry}
-                material={redBackLightMaterial}
-                position={[0, 0, 1.037]}
-                rotation={[0, 0, -2.356]}
+                geometry={nodes3.red3.geometry}
+                material={redBackLightMaterial4}
+                position={[-0.008, -0.303, -0.14]}
+                rotation={[Math.PI / 2, 0, 0]}
+                scale={[1, 0.113, 1]}
             />
             <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.Cube002.geometry}
-                material={orangeBackLightMaterial}
-                position={[0.377, 0.467, 1.037]}
-                rotation={[0, 0, Math.PI]}
+                geometry={nodes3.red.geometry}
+                material={redBackLightMaterial3}
+                position={[-1.279, 0, -0.126]}
+                scale={[0.325, 1, 0.109]}
             />
             <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.Cube003.geometry}
-                material={whiteBackLightMaterial}
-                position={[-0.364, 0.467, 1.037]}
-                rotation={[0, 0, -Math.PI / 2]}
+                geometry={nodes3.red2.geometry}
+                material={redBackLightMaterial3}
+                position={[1.271, 0, -0.126]}
+                rotation={[-Math.PI, 0, 0]}
+                scale={[-0.325, -1, -0.109]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes3.white.geometry}
+                material={whiteBackLightMaterial3}
+                position={[-1.279, 0, -0.126]}
+                scale={[0.325, 1, 0.109]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes3.orange.geometry}
+                material={orangeBackLightMaterial4}
+                position={[1.268, 0, -0.126]}
+                rotation={[-Math.PI, 0, 0]}
+                scale={[-0.325, -1, -0.109]}
             />
         </group>
 
         <group
+        name="backlight_RIGHT"
+        scale={0.05}
+        position={[frameLength / 2 - 0.034, -0.055, - (frameWidth / 2 - 0.15)]}
+        rotation={[0, - Math.PI / 2, 0]}>
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes3.BLACK.geometry}
+                material={backLightMaterial}
+                scale={[1.991, 1, 0.075]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes3.Zilver.geometry}
+                material={backLightMaterial}
+                position={[1.348, 0.657, -0.247]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                scale={[0.078, 0.023, 0.078]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes3.red3.geometry}
+                material={redBackLightMaterial4}
+                position={[-0.008, -0.303, -0.14]}
+                rotation={[Math.PI / 2, 0, 0]}
+                scale={[1, 0.113, 1]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes3.red.geometry}
+                material={redBackLightMaterial3}
+                position={[-1.279, 0, -0.126]}
+                scale={[0.325, 1, 0.109]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes3.red2.geometry}
+                material={redBackLightMaterial3}
+                position={[1.271, 0, -0.126]}
+                rotation={[-Math.PI, 0, 0]}
+                scale={[-0.325, -1, -0.109]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes3.white.geometry}
+                material={orangeBackLightMaterial4}
+                position={[-1.279, 0, -0.126]}
+                scale={[0.325, 1, 0.109]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes3.orange.geometry}
+                material={whiteBackLightMaterial3}
+                position={[1.268, 0, -0.126]}
+                rotation={[-Math.PI, 0, 0]}
+                scale={[-0.325, -1, -0.109]}
+            />
+        </group>
+
+    
+
+        <group
         name="side-flectors1"
         visible={frameLength > 1.3}>
-            <mesh
+            {/* <mesh
                 castShadow
                 receiveShadow
                 geometry={roundedBox.geometry}
@@ -397,12 +513,48 @@ export default function Details ()
                 position={[- (frameLength/2 - reflectorX), plankHeight/2 + 0.025, - (frameWidth / 2 + 0.035)]}
                 scale={[0.025, 0.025, 0.1]}
                 rotation={[0, 0, 0]}
-            />
+            /> */}
+            <group scale={[0.05, 0.055, 0.055]}
+            position={[- (frameLength/2 - reflectorX), plankHeight/2 + 0.025, - (frameWidth / 2 + 0.03)]}
+            rotation={[0, Math.PI * 0.5, 0]}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes2.Cube.geometry}
+                    material={backLightMaterial}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes2.Cube001.geometry}
+                    material={orangeBackLightMaterial3}
+                    position={[0.158, 0, 0]}
+                    scale={[0.014, 0.429, 0.429]}
+                />
+            </group>
+            <group scale={[0.05, 0.055, 0.055]}
+            position={[- (frameLength/2 - reflectorX), plankHeight/2 + 0.025, (frameWidth / 2 + 0.03)]}
+            rotation={[0, - Math.PI * 0.5, 0]}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes2.Cube.geometry}
+                    material={backLightMaterial}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes2.Cube001.geometry}
+                    material={orangeBackLightMaterial3}
+                    position={[0.158, 0, 0]}
+                    scale={[0.014, 0.429, 0.429]}
+                />
+            </group>
         </group>
 
         <group
         name="side-flectors2">
-            <mesh
+            {/* <mesh
                 castShadow
                 receiveShadow
                 geometry={roundedBox.geometry}
@@ -419,54 +571,126 @@ export default function Details ()
                 position={[-(frameLength/2 -0.23), plankHeight/2 +0.025, - (frameWidth / 2 + 0.035)]}
                 scale={[0.025, 0.025, 0.1]}
                 rotation={[0, 0, 0]}
-            />
+            /> */}
+             <group scale={[0.05, 0.055, 0.055]}
+            position={[- (frameLength/2 - 0.23), plankHeight/2 + 0.025, - (frameWidth / 2 + 0.03)]}
+            rotation={[0, Math.PI * 0.5, 0]}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes2.Cube.geometry}
+                    material={backLightMaterial}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes2.Cube001.geometry}
+                    material={orangeBackLightMaterial3}
+                    position={[0.158, 0, 0]}
+                    scale={[0.014, 0.429, 0.429]}
+                />
+            </group>
+            <group scale={[0.05, 0.055, 0.055]}
+            position={[- (frameLength/2 - 0.23), plankHeight/2 + 0.025, (frameWidth / 2 + 0.03)]}
+            rotation={[0, - Math.PI * 0.5, 0]}>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes2.Cube.geometry}
+                    material={backLightMaterial}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes2.Cube001.geometry}
+                    material={orangeBackLightMaterial3}
+                    position={[0.158, 0, 0]}
+                    scale={[0.014, 0.429, 0.429]}
+                />
+            </group>
         </group>
 
         <group
         name="wheel-flectors-back"
-        position={ frameLength> 2.7 ? [0.385,0,0] : [0,0,0]}>
+        position={ frameLength> 2.7 ? [0.299,0,0] : [-0.034,0,0]}>
             <mesh
                 castShadow
                 receiveShadow
-                geometry={roundedBox.geometry}
-                material={redBackLightMaterial2}
+                geometry={cylinderReflector}
+                material={rubber}
                 position={[0.385, -0.125, frameWidth / 2 + 0.15]}
-                scale={[0.025, 0.025, 0.1]}
-                rotation={[0, -Math.PI * 0.5, 0]}
+                scale={[0.06, 0.02, 0.06]}
+                rotation={[Math.PI / 2, 0, Math.PI / 2]}
             />
             <mesh
                 castShadow
                 receiveShadow
-                geometry={roundedBox.geometry}
+                geometry={cylinderReflector}
                 material={redBackLightMaterial2}
-                position={[0.385, -0.125, - (frameWidth / 2 + 0.15)]}
-                scale={[0.025, 0.025, 0.1]}
-                rotation={[0, -Math.PI * 0.5, 0]}
+                position={[0.385, -0.125, frameWidth / 2 + 0.15]}
+                scale={[0.05, 0.05, 0.05]}
+                rotation={[Math.PI / 2, 0, Math.PI / 2]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={cylinderReflector}
+                material={rubber}
+                position={[0.385, -0.125, -(frameWidth / 2 + 0.15)]}
+                scale={[0.06, 0.02, 0.06]}
+                rotation={[Math.PI / 2, 0, Math.PI / 2]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={cylinderReflector}
+                material={redBackLightMaterial2}
+                position={[0.385, -0.125, -(frameWidth / 2 + 0.15)]}
+                scale={[0.05, 0.05, 0.05]}
+                rotation={[Math.PI / 2, 0, Math.PI / 2]}
             />
         </group>
         <group
         name="wheel-flectors-front"
         rotation={[0, Math.PI, 0]}
-        position={ frameLength> 2.7 ? [-0.385,0,0] : [0,0,0]}>
+        position={ frameLength> 2.7 ? [-0.258,0,0] : [0.033,0,0]}>
             <mesh
                 castShadow
                 receiveShadow
-                geometry={roundedBox.geometry}
+                geometry={cylinderReflector}
+                material={rubber}
+                position={[0.385, -0.125, frameWidth / 2 + 0.15]}
+                scale={[0.06, 0.02, 0.06]}
+                rotation={[Math.PI / 2, 0, Math.PI / 2]}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={cylinderReflector}
                 material={whiteBackLightMaterial2}
                 position={[0.385, -0.125, frameWidth / 2 + 0.15]}
-                scale={[0.025, 0.025, 0.1]}
-                rotation={[0, -Math.PI * 0.5, 0]}
+                scale={[0.05, 0.05, 0.05]}
+                rotation={[Math.PI / 2, 0, Math.PI / 2]}
             />
-            
+             <mesh
+                castShadow
+                receiveShadow
+                geometry={cylinderReflector}
+                material={rubber}
+                position={[0.385, -0.125, - (frameWidth / 2 + 0.15)]}
+                scale={[0.06, 0.02, 0.06]}
+                rotation={[Math.PI / 2, 0, Math.PI / 2]}
+            />
             <mesh
                 castShadow
                 receiveShadow
-                geometry={roundedBox.geometry}
+                geometry={cylinderReflector}
                 material={whiteBackLightMaterial2}
                 position={[0.385, -0.125, - (frameWidth / 2 + 0.15)]}
-                scale={[0.025, 0.025, 0.1]}
-                rotation={[0, -Math.PI * 0.5, 0]}
+                scale={[0.05, 0.05, 0.05]}
+                rotation={[Math.PI / 2, 0, Math.PI / 2]}
             />
+            
         </group>
         <group
         name="trailer-gate"
@@ -536,3 +760,5 @@ export default function Details ()
 }
 
 useGLTF.preload(`${baseUrl}/models/scharnier.glb`)
+useGLTF.preload(`${baseUrl}/models/reflectorSide.glb`)
+useGLTF.preload(`${baseUrl}/models/backlights3.0.glb`)

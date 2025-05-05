@@ -44,7 +44,7 @@ export default function Chassis() {
 		texture.repeat.set(2, 2.5);
 	});
 
-	const stealMatcap = useTexture(`${baseUrl}/matcaps/steal6.4.png`);
+	const stealMatcap = useTexture(`${baseUrl}/matcaps/steal6.5.png`);
 	stealMatcap.colorSpace = THREE.SRGBColorSpace;
 
 	/**

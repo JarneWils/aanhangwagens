@@ -76,14 +76,14 @@ export default function App() {
 			  }
 			}}>
 			<EffectComposer multisampling={8}>
-			  <N8AO halfRes={false} aoRadius={18} distanceFalloff={0.5} intensity={3} screenSpaceRadius renderMode={0} />
+			  <N8AO halfRes={false} aoRadius={18} distanceFalloff={0.5} intensity={4} screenSpaceRadius renderMode={0} />
 			  <ToneMapping mode={ToneMappingMode.NEUTRAL} />
 			  <BrightnessContrast contrast={0.12} brightness={-0.02} />
 			</EffectComposer>
   
 			<Environment
 			  files={`${baseUrl}/img/environment2.hdr`}
-			  environmentIntensity={darkMode ? 1.5 : 3.5}
+			  environmentIntensity={darkMode ? 1.5 : 3}
 			/>
 			<SoftShadows size={4} samples={20} focus={0.2} />
 			<CameraController />

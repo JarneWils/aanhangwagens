@@ -73,7 +73,7 @@ export default function TrailerBed() {
 	const woodMatcap = useTexture(`${baseUrl}/matcaps/wood5.png`);
 	woodMatcap.colorSpace = THREE.SRGBColorSpace
 	
-	const woodMatcapDark = useTexture(`${baseUrl}/matcaps/wood5.png`);
+	const woodMatcapDark = useTexture(`${baseUrl}/matcaps/wood3.4.png`);
 	woodMatcapDark.colorSpace = THREE.SRGBColorSpace
 
 	/**
@@ -116,7 +116,7 @@ export default function TrailerBed() {
 	// const darkWoodMaterial = useMemo(() => {
 	// 	const mat = new THREE.MeshMatcapMaterial({
 	// 		... woodTexture,
-	// 		color: "#ccbec2",
+	// 		color: "rgb(177, 169, 172)",
 	// 		matcap: woodMatcapDark,
 	// 	});
 	// 	return mat;
